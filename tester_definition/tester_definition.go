@@ -3,7 +3,7 @@ package tester_definition
 import (
 	"time"
 
-	"github.com/bootlab-dev/bootlab-tester-utils/test_case_harness"
+	"github.com/bootlab-dev/tester-utils/test_case_harness"
 )
 
 // TestCase represents a test case that'll be run against the user's code.

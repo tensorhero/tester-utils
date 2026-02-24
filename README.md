@@ -33,7 +33,7 @@ package main
 
 import (
     "os"
-    tester_utils "github.com/bootlab-dev/bootlab-tester-utils"
+    tester_utils "github.com/bootlab-dev/tester-utils"
 )
 
 func main() {
@@ -65,7 +65,7 @@ func main() {
 流式 API 用于测试程序（类似 check50）：
 
 ```go
-import "github.com/bootlab-dev/bootlab-tester-utils/runner"
+import "github.com/bootlab-dev/tester-utils/runner"
 
 // 基本用法
 err := runner.Run("./hello").
@@ -94,4 +94,4 @@ err := runner.Run("./mario").
 
 ## 文档
 
-详细 API 文档请查看 [GoDoc](https://pkg.go.dev/github.com/bootlab-dev/bootlab-tester-utils)。
+详细 API 文档请查看 [GoDoc](https://pkg.go.dev/github.com/bootlab-dev/tester-utils)。

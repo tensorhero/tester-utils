@@ -4,8 +4,8 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/bootlab-dev/bootlab-tester-utils/executable"
-	"github.com/bootlab-dev/bootlab-tester-utils/logger"
+	"github.com/bootlab-dev/tester-utils/executable"
+	"github.com/bootlab-dev/tester-utils/logger"
 )
 
 // TestCaseHarness is passed to your TestCase's TestFunc.

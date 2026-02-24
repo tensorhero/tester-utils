@@ -1,4 +1,4 @@
-module github.com/bootlab-dev/bootlab-tester-utils
+module github.com/bootlab-dev/tester-utils
 
 go 1.24
 

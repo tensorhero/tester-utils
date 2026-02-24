@@ -4,10 +4,10 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/bootlab-dev/bootlab-tester-utils/executable"
-	"github.com/bootlab-dev/bootlab-tester-utils/logger"
-	"github.com/bootlab-dev/bootlab-tester-utils/test_case_harness"
-	"github.com/bootlab-dev/bootlab-tester-utils/tester_definition"
+	"github.com/bootlab-dev/tester-utils/executable"
+	"github.com/bootlab-dev/tester-utils/logger"
+	"github.com/bootlab-dev/tester-utils/test_case_harness"
+	"github.com/bootlab-dev/tester-utils/tester_definition"
 )
 
 type TestRunnerStep struct {

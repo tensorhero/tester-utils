@@ -8,9 +8,9 @@ import (
 	"strings"
 	"testing"
 
-	tester_utils "github.com/bootlab-dev/bootlab-tester-utils"
-	"github.com/bootlab-dev/bootlab-tester-utils/stdio_mocker"
-	"github.com/bootlab-dev/bootlab-tester-utils/tester_definition"
+	tester_utils "github.com/bootlab-dev/tester-utils"
+	"github.com/bootlab-dev/tester-utils/stdio_mocker"
+	"github.com/bootlab-dev/tester-utils/tester_definition"
 	"github.com/stretchr/testify/assert"
 )
 

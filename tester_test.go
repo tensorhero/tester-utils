@@ -6,8 +6,8 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/bootlab-dev/bootlab-tester-utils/test_case_harness"
-	"github.com/bootlab-dev/bootlab-tester-utils/tester_definition"
+	"github.com/bootlab-dev/tester-utils/test_case_harness"
+	"github.com/bootlab-dev/tester-utils/tester_definition"
 	"github.com/stretchr/testify/assert"
 )
 

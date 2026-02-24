@@ -8,8 +8,8 @@ import (
 	"path"
 	"strings"
 
-	"github.com/bootlab-dev/bootlab-tester-utils/internal"
-	"github.com/bootlab-dev/bootlab-tester-utils/tester_definition"
+	"github.com/bootlab-dev/tester-utils/internal"
+	"github.com/bootlab-dev/tester-utils/tester_definition"
 	"gopkg.in/yaml.v2"
 )
 

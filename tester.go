@@ -6,13 +6,13 @@ import (
 	"os"
 	"strings"
 
-	"github.com/bootlab-dev/bootlab-tester-utils/executable"
-	"github.com/bootlab-dev/bootlab-tester-utils/internal"
-	"github.com/bootlab-dev/bootlab-tester-utils/logger"
-	"github.com/bootlab-dev/bootlab-tester-utils/random"
-	"github.com/bootlab-dev/bootlab-tester-utils/test_runner"
-	"github.com/bootlab-dev/bootlab-tester-utils/tester_context"
-	"github.com/bootlab-dev/bootlab-tester-utils/tester_definition"
+	"github.com/bootlab-dev/tester-utils/executable"
+	"github.com/bootlab-dev/tester-utils/internal"
+	"github.com/bootlab-dev/tester-utils/logger"
+	"github.com/bootlab-dev/tester-utils/random"
+	"github.com/bootlab-dev/tester-utils/test_runner"
+	"github.com/bootlab-dev/tester-utils/tester_context"
+	"github.com/bootlab-dev/tester-utils/tester_definition"
 	"github.com/fatih/color"
 )
 
