@@ -225,14 +225,14 @@ func TestSegfaultInPty(t *testing.T) {
 }
 
 func TestBootllmSecretEnvVarsFilteredInPty(t *testing.T) {
-	os.Setenv("BOOTLLM_SECRET_API_KEY", "secret-key-123")
-	os.Setenv("BOOTLLM_REPOSITORY_DIR", "/some/path")
+	os.Setenv("BOOTLAB_SECRET_API_KEY", "secret-key-123")
+	os.Setenv("BOOTLAB_REPOSITORY_DIR", "/some/path")
 	os.Setenv("TEST_REGULAR_VAR", "regular-value")
 
 	defer func() {
-		os.Unsetenv("BOOTLLM_SECRET_API_KEY")
+		os.Unsetenv("BOOTLAB_SECRET_API_KEY")
 		os.Unsetenv("TEST_REGULAR_VAR")
-		os.Unsetenv("BOOTLLM_REPOSITORY_DIR")
+		os.Unsetenv("BOOTLAB_REPOSITORY_DIR")
 	}()
 
 	e := getNewExecutableForPTYTests("env")
@@ -240,10 +240,10 @@ func TestBootllmSecretEnvVarsFilteredInPty(t *testing.T) {
 	assert.NoError(t, err)
 	output := string(result.Stdout)
 
-	assert.NotContains(t, output, "BOOTLLM_SECRET_API_KEY")
+	assert.NotContains(t, output, "BOOTLAB_SECRET_API_KEY")
 	assert.NotContains(t, output, "secret-key-123")
 	assert.Contains(t, output, "TEST_REGULAR_VAR=regular-value")
-	assert.Contains(t, output, "BOOTLLM_REPOSITORY_DIR=/some/path")
+	assert.Contains(t, output, "BOOTLAB_REPOSITORY_DIR=/some/path")
 }
 
 func TestPathResolutionWithDifferentWorkingDirInPty(t *testing.T) {

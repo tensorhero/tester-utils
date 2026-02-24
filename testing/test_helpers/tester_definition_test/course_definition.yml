@@ -8,10 +8,10 @@ description_md: |-
 
 supported_languages: ["python", "go", "php"]
 starter_repos:
-  python: https://github.com/bootllm/redis-starter-py
-  swift: https://github.com/bootllm/redis-starter-swift
-  go: https://github.com/bootllm/redis-starter-golang
-  php: https://github.com/bootllm/redis-starter-php
+  python: https://github.com/bootlab-dev/redis-starter-py
+  swift: https://github.com/bootlab-dev/redis-starter-swift
+  go: https://github.com/bootlab-dev/redis-starter-golang
+  php: https://github.com/bootlab-dev/redis-starter-php
 
 marketing_intro_md: |-
   This is the first BootLLM challenge. We're currently running [early

@@ -8,9 +8,9 @@ import (
 	"strings"
 	"testing"
 
-	tester_utils "github.com/bootllm/tester-utils"
-	"github.com/bootllm/tester-utils/stdio_mocker"
-	"github.com/bootllm/tester-utils/tester_definition"
+	tester_utils "github.com/bootlab-dev/bootlab-tester-utils"
+	"github.com/bootlab-dev/bootlab-tester-utils/stdio_mocker"
+	"github.com/bootlab-dev/bootlab-tester-utils/tester_definition"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -135,9 +135,9 @@ func runCLIStage(testerDefinition tester_definition.TesterDefinition, testCasesJ
 	}
 
 	return tester_utils.RunCLI(map[string]string{
-		"BOOTLLM_TEST_CASES_JSON": testCasesJson,
-		"BOOTLLM_REPOSITORY_DIR":  path,
-		"BOOTLLM_SKIP_ANTI_CHEAT": strconv.FormatBool(skipAntiCheat),
+		"BOOTLAB_TEST_CASES_JSON": testCasesJson,
+		"BOOTLAB_REPOSITORY_DIR":  path,
+		"BOOTLAB_SKIP_ANTI_CHEAT": strconv.FormatBool(skipAntiCheat),
 	}, testerDefinition)
 }
 

@@ -1,6 +1,6 @@
-# BootLLM Tester Utils
+# BootLab Tester Utils
 
-BootLLM 课程测试工具的共享框架模块。
+BootLab 课程测试工具的共享框架模块。
 
 **基于：** [codecrafters-io/tester-utils](https://github.com/codecrafters-io/tester-utils)
 
@@ -16,9 +16,9 @@ BootLLM 课程测试工具的共享框架模块。
    - 标志参数：`./tester -s hello -d ~/work`
    - 帮助/版本：`--help`, `--version`
 
-3. **可选配置文件** - `bootllm.yml` 为可选（有合理默认值），而非强制要求
+3. **可选配置文件** - `bootlab.yml` 为可选（有合理默认值），而非强制要求
 
-4. **默认工作目录** - `BOOTLLM_REPOSITORY_DIR` 默认为当前目录 `.`，无需显式设置
+4. **默认工作目录** - `BOOTLAB_REPOSITORY_DIR` 默认为当前目录 `.`，无需显式设置
 
 5. **新增 SubmissionDir** - `TestCaseHarness` 暴露学员提交目录，方便访问相对路径
 
@@ -33,7 +33,7 @@ package main
 
 import (
     "os"
-    tester_utils "github.com/bootllm/tester-utils"
+    tester_utils "github.com/bootlab-dev/bootlab-tester-utils"
 )
 
 func main() {
@@ -65,7 +65,7 @@ func main() {
 流式 API 用于测试程序（类似 check50）：
 
 ```go
-import "github.com/bootllm/tester-utils/runner"
+import "github.com/bootlab-dev/bootlab-tester-utils/runner"
 
 // 基本用法
 err := runner.Run("./hello").
@@ -90,8 +90,8 @@ err := runner.Run("./mario").
 
 **流式日志支持** (Worker 集成):
 
-- `BOOTLLM_STREAM_LOGS=1` - 禁用颜色并将 stdout 重定向到 stderr，便于 Worker 捕获实时日志流
+- `BOOTLAB_STREAM_LOGS=1` - 禁用颜色并将 stdout 重定向到 stderr，便于 Worker 捕获实时日志流
 
 ## 文档
 
-详细 API 文档请查看 [GoDoc](https://pkg.go.dev/github.com/bootllm/tester-utils)。
+详细 API 文档请查看 [GoDoc](https://pkg.go.dev/github.com/bootlab-dev/bootlab-tester-utils)。

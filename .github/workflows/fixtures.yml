@@ -50,9 +50,9 @@ jobs:
 
       - name: Setup git config
         run: |
-          git config --global user.email "hello@bootllm.com"
-          git config --global user.name "bootllm-bot"
-          git remote set-url origin https://bootllm-bot:${{ secrets.TESTER_FIXTURE_GENERATION_GITHUB_TOKEN }}@github.com/bootllm/${{ inputs.tester_repo }}.git
+          git config --global user.email "hello@bootlab.dev"
+          git config --global user.name "bootlab-bot"
+          git remote set-url origin https://bootlab-bot:${{ secrets.TESTER_FIXTURE_GENERATION_GITHUB_TOKEN }}@github.com/bootlab-dev/${{ inputs.tester_repo }}.git
           git fetch origin ${{ github.head_ref }}
           git checkout ${{ github.head_ref }}
 

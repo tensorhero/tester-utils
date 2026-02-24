@@ -4,13 +4,13 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/bootllm/tester-utils/executable"
-	"github.com/bootllm/tester-utils/logger"
+	"github.com/bootlab-dev/bootlab-tester-utils/executable"
+	"github.com/bootlab-dev/bootlab-tester-utils/logger"
 )
 
 // TestCaseHarness is passed to your TestCase's TestFunc.
 //
-// For BootLLM courses that don't use your_program.sh, use SubmissionDir directly:
+// For BootLab courses that don't use your_program.sh, use SubmissionDir directly:
 //
 //	if !harness.FileExists("hello.c") {
 //	    return fmt.Errorf("hello.c does not exist")

@@ -12,8 +12,8 @@ import (
 func TestInit(t *testing.T) {
 	t.Run("uses seed from environment variable", func(t *testing.T) {
 		// Set a specific seed
-		os.Setenv("BOOTLLM_RANDOM_SEED", "42")
-		defer os.Unsetenv("BOOTLLM_RANDOM_SEED")
+		os.Setenv("BOOTLAB_RANDOM_SEED", "42")
+		defer os.Unsetenv("BOOTLAB_RANDOM_SEED")
 
 		Init()
 
@@ -22,7 +22,7 @@ func TestInit(t *testing.T) {
 		val2 := RandomInt(0, 100)
 
 		// Reset with the same seed
-		os.Setenv("BOOTLLM_RANDOM_SEED", "42")
+		os.Setenv("BOOTLAB_RANDOM_SEED", "42")
 		Init()
 
 		// Should get the same sequence
@@ -31,7 +31,7 @@ func TestInit(t *testing.T) {
 	})
 
 	t.Run("works without seed environment variable", func(t *testing.T) {
-		os.Unsetenv("BOOTLLM_RANDOM_SEED")
+		os.Unsetenv("BOOTLAB_RANDOM_SEED")
 		Init()
 
 		// Just ensure it doesn't panic
@@ -40,8 +40,8 @@ func TestInit(t *testing.T) {
 }
 
 func TestRandomInt(t *testing.T) {
-	os.Setenv("BOOTLLM_RANDOM_SEED", "123")
-	defer os.Unsetenv("BOOTLLM_RANDOM_SEED")
+	os.Setenv("BOOTLAB_RANDOM_SEED", "123")
+	defer os.Unsetenv("BOOTLAB_RANDOM_SEED")
 	Init()
 
 	t.Run("returns values within the range", func(t *testing.T) {
@@ -155,8 +155,8 @@ func TestRandomFloat64s(t *testing.T) {
 }
 
 func TestRandomWord(t *testing.T) {
-	os.Setenv("BOOTLLM_RANDOM_SEED", "42")
-	defer os.Unsetenv("BOOTLLM_RANDOM_SEED")
+	os.Setenv("BOOTLAB_RANDOM_SEED", "42")
+	defer os.Unsetenv("BOOTLAB_RANDOM_SEED")
 	Init()
 
 	t.Run("returns a word from the predefined list", func(t *testing.T) {
@@ -166,7 +166,7 @@ func TestRandomWord(t *testing.T) {
 
 	t.Run("can return different values on subsequent calls", func(t *testing.T) {
 		// Reset with the seed
-		os.Setenv("BOOTLLM_RANDOM_SEED", "77")
+		os.Setenv("BOOTLAB_RANDOM_SEED", "77")
 		Init()
 
 		// Generate a bunch of words and verify we get at least 2 different ones
@@ -182,8 +182,8 @@ func TestRandomWord(t *testing.T) {
 }
 
 func TestRandomWords(t *testing.T) {
-	os.Setenv("BOOTLLM_RANDOM_SEED", "12345")
-	defer os.Unsetenv("BOOTLLM_RANDOM_SEED")
+	os.Setenv("BOOTLAB_RANDOM_SEED", "12345")
+	defer os.Unsetenv("BOOTLAB_RANDOM_SEED")
 	Init()
 
 	t.Run("returns the requested number of words", func(t *testing.T) {
@@ -202,8 +202,8 @@ func TestRandomWords(t *testing.T) {
 }
 
 func TestRandomString(t *testing.T) {
-	os.Setenv("BOOTLLM_RANDOM_SEED", "987")
-	defer os.Unsetenv("BOOTLLM_RANDOM_SEED")
+	os.Setenv("BOOTLAB_RANDOM_SEED", "987")
+	defer os.Unsetenv("BOOTLAB_RANDOM_SEED")
 	Init()
 
 	t.Run("returns a space-separated string of words", func(t *testing.T) {
@@ -218,8 +218,8 @@ func TestRandomString(t *testing.T) {
 }
 
 func TestRandomStrings(t *testing.T) {
-	os.Setenv("BOOTLLM_RANDOM_SEED", "333")
-	defer os.Unsetenv("BOOTLLM_RANDOM_SEED")
+	os.Setenv("BOOTLAB_RANDOM_SEED", "333")
+	defer os.Unsetenv("BOOTLAB_RANDOM_SEED")
 	Init()
 
 	t.Run("returns the requested number of strings", func(t *testing.T) {
@@ -234,8 +234,8 @@ func TestRandomStrings(t *testing.T) {
 }
 
 func TestRandomElementFromArray(t *testing.T) {
-	os.Setenv("BOOTLLM_RANDOM_SEED", "8675309")
-	defer os.Unsetenv("BOOTLLM_RANDOM_SEED")
+	os.Setenv("BOOTLAB_RANDOM_SEED", "8675309")
+	defer os.Unsetenv("BOOTLAB_RANDOM_SEED")
 	Init()
 
 	t.Run("returns an element from the array", func(t *testing.T) {
@@ -256,8 +256,8 @@ func TestRandomElementFromArray(t *testing.T) {
 }
 
 func TestRandomElementsFromArray(t *testing.T) {
-	os.Setenv("BOOTLLM_RANDOM_SEED", "1111")
-	defer os.Unsetenv("BOOTLLM_RANDOM_SEED")
+	os.Setenv("BOOTLAB_RANDOM_SEED", "1111")
+	defer os.Unsetenv("BOOTLAB_RANDOM_SEED")
 	Init()
 
 	t.Run("returns the requested number of elements", func(t *testing.T) {
@@ -295,8 +295,8 @@ func TestRandomElementsFromArray(t *testing.T) {
 }
 
 func TestSeededRandomInt(t *testing.T) {
-	os.Setenv("BOOTLLM_RANDOM_SEED", "42")
-	defer os.Unsetenv("BOOTLLM_RANDOM_SEED")
+	os.Setenv("BOOTLAB_RANDOM_SEED", "42")
+	defer os.Unsetenv("BOOTLAB_RANDOM_SEED")
 	Init()
 
 	assert.Equal(t, RandomInt(1, 10), 9)
@@ -304,8 +304,8 @@ func TestSeededRandomInt(t *testing.T) {
 }
 
 func TestSeededRandomFloat64(t *testing.T) {
-	os.Setenv("BOOTLLM_RANDOM_SEED", "42")
-	defer os.Unsetenv("BOOTLLM_RANDOM_SEED")
+	os.Setenv("BOOTLAB_RANDOM_SEED", "42")
+	defer os.Unsetenv("BOOTLAB_RANDOM_SEED")
 	Init()
 
 	assert.Equal(t, RandomFloat64(1, 100), 37.92980774361663)
@@ -313,16 +313,16 @@ func TestSeededRandomFloat64(t *testing.T) {
 }
 
 func TestSeededRandomString(t *testing.T) {
-	os.Setenv("BOOTLLM_RANDOM_SEED", "42")
-	defer os.Unsetenv("BOOTLLM_RANDOM_SEED")
+	os.Setenv("BOOTLAB_RANDOM_SEED", "42")
+	defer os.Unsetenv("BOOTLAB_RANDOM_SEED")
 	Init()
 
 	assert.Equal(t, RandomString(), "strawberry pineapple raspberry blueberry banana orange")
 }
 
 func TestShuffleArray(t *testing.T) {
-	os.Setenv("BOOTLLM_RANDOM_SEED", "12345")
-	defer os.Unsetenv("BOOTLLM_RANDOM_SEED")
+	os.Setenv("BOOTLAB_RANDOM_SEED", "12345")
+	defer os.Unsetenv("BOOTLAB_RANDOM_SEED")
 	Init()
 
 	t.Run("returns all elements from the original array", func(t *testing.T) {
@@ -361,12 +361,12 @@ func TestShuffleArray(t *testing.T) {
 		original := []string{"x", "y", "z", "w", "v"}
 
 		// First shuffle with seed
-		os.Setenv("BOOTLLM_RANDOM_SEED", "999")
+		os.Setenv("BOOTLAB_RANDOM_SEED", "999")
 		Init()
 		shuffled1 := ShuffleArray(original)
 
 		// Second shuffle with same seed
-		os.Setenv("BOOTLLM_RANDOM_SEED", "999")
+		os.Setenv("BOOTLAB_RANDOM_SEED", "999")
 		Init()
 		shuffled2 := ShuffleArray(original)
 

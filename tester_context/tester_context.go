@@ -8,12 +8,12 @@ import (
 	"path"
 	"strings"
 
-	"github.com/bootllm/tester-utils/internal"
-	"github.com/bootllm/tester-utils/tester_definition"
+	"github.com/bootlab-dev/bootlab-tester-utils/internal"
+	"github.com/bootlab-dev/bootlab-tester-utils/tester_definition"
 	"gopkg.in/yaml.v2"
 )
 
-// TesterContextTestCase represents one element in the BOOTLLM_TEST_CASES environment variable
+// TesterContextTestCase represents one element in the BOOTLAB_TEST_CASES environment variable
 type TesterContextTestCase struct {
 	// Slug is the slug of the test case. Example: "bind-to-port"
 	Slug string `json:"slug"`
@@ -25,7 +25,7 @@ type TesterContextTestCase struct {
 	Title string `json:"title"`
 }
 
-// TesterContext holds all flags passed in via environment variables, or from the bootllm.yml file
+// TesterContext holds all flags passed in via environment variables, or from the bootlab.yml file
 type TesterContext struct {
 	// SubmissionDir is the directory containing the student's submission
 	SubmissionDir string
@@ -48,13 +48,13 @@ func (c TesterContext) Print() {
 
 // GetTesterContext parses flags and returns a Context object
 // 支持三种模式：
-// 1. BOOTLLM_TEST_CASES_JSON - 完整 JSON 格式（兼容 worker 调度）
-// 2. BOOTLLM_STAGE - 指定单个 stage slug（调试用）
+// 1. BOOTLAB_TEST_CASES_JSON - 完整 JSON 格式（兼容 worker 调度）
+// 2. BOOTLAB_STAGE - 指定单个 stage slug（调试用）
 // 3. 无环境变量 - 运行所有测试（默认行为）
 //
-// BOOTLLM_REPOSITORY_DIR 默认为当前目录 "."
+// BOOTLAB_REPOSITORY_DIR 默认为当前目录 "."
 func GetTesterContext(env map[string]string, definition tester_definition.TesterDefinition) (TesterContext, error) {
-	submissionDir, ok := env["BOOTLLM_REPOSITORY_DIR"]
+	submissionDir, ok := env["BOOTLAB_REPOSITORY_DIR"]
 	if !ok {
 		// 默认为当前目录
 		submissionDir = "."
@@ -64,13 +64,13 @@ func GetTesterContext(env map[string]string, definition tester_definition.Tester
 	var err error
 
 	// 优先级：JSON > STAGE > 全部运行
-	if testCasesJson, ok := env["BOOTLLM_TEST_CASES_JSON"]; ok {
+	if testCasesJson, ok := env["BOOTLAB_TEST_CASES_JSON"]; ok {
 		// 模式1：完整 JSON 格式（兼容 worker）
 		testCases, err = parseTestCasesFromJSON(testCasesJson)
 		if err != nil {
 			return TesterContext{}, err
 		}
-	} else if stageSlug, ok := env["BOOTLLM_STAGE"]; ok {
+	} else if stageSlug, ok := env["BOOTLAB_STAGE"]; ok {
 		// 模式2：单个 stage（调试用）
 		testCases, err = buildTestCasesForStage(stageSlug, definition)
 		if err != nil {
@@ -86,7 +86,7 @@ func GetTesterContext(env map[string]string, definition tester_definition.Tester
 	}
 
 	var shouldSkipAntiCheatTestCases = false
-	skipAntiCheatValue, ok := env["BOOTLLM_SKIP_ANTI_CHEAT"]
+	skipAntiCheatValue, ok := env["BOOTLAB_SKIP_ANTI_CHEAT"]
 	if ok && skipAntiCheatValue == "true" {
 		shouldSkipAntiCheatTestCases = true
 	}
@@ -106,7 +106,7 @@ func GetTesterContext(env map[string]string, definition tester_definition.Tester
 		}
 	}
 
-	configPath := path.Join(submissionDir, "bootllm.yml")
+	configPath := path.Join(submissionDir, "bootlab.yml")
 
 	yamlConfig, err := readFromYAML(configPath)
 	if err != nil {
@@ -126,18 +126,18 @@ func GetTesterContext(env map[string]string, definition tester_definition.Tester
 func parseTestCasesFromJSON(jsonStr string) ([]TesterContextTestCase, error) {
 	testCases := []TesterContextTestCase{}
 	if err := json.Unmarshal([]byte(jsonStr), &testCases); err != nil {
-		return nil, fmt.Errorf("failed to parse BOOTLLM_TEST_CASES_JSON: %s", err)
+		return nil, fmt.Errorf("failed to parse BOOTLAB_TEST_CASES_JSON: %s", err)
 	}
 
 	for _, tc := range testCases {
 		if tc.Slug == "" {
-			return nil, fmt.Errorf("BOOTLLM_TEST_CASES_JSON contains a test case with an empty slug")
+			return nil, fmt.Errorf("BOOTLAB_TEST_CASES_JSON contains a test case with an empty slug")
 		}
 		if tc.TesterLogPrefix == "" {
-			return nil, fmt.Errorf("BOOTLLM_TEST_CASES_JSON contains a test case with an empty tester_log_prefix")
+			return nil, fmt.Errorf("BOOTLAB_TEST_CASES_JSON contains a test case with an empty tester_log_prefix")
 		}
 		if tc.Title == "" {
-			return nil, fmt.Errorf("BOOTLLM_TEST_CASES_JSON contains a test case with an empty title")
+			return nil, fmt.Errorf("BOOTLAB_TEST_CASES_JSON contains a test case with an empty title")
 		}
 	}
 
@@ -191,18 +191,18 @@ func readFromYAML(configPath string) (yamlConfig, error) {
 
 	fileContents, err := os.ReadFile(configPath)
 	if err != nil {
-		// bootllm.yml is optional - return default config if not found
+		// bootlab.yml is optional - return default config if not found
 		if os.IsNotExist(err) {
 			return yamlConfig{Debug: false}, nil
 		}
 		return yamlConfig{}, &internal.UserError{
-			Message: fmt.Sprintf("Can't read bootllm.yml file: %v", err),
+			Message: fmt.Sprintf("Can't read bootlab.yml file: %v", err),
 		}
 	}
 
 	if err := yaml.Unmarshal(fileContents, c); err != nil {
 		return yamlConfig{}, &internal.UserError{
-			Message: fmt.Sprintf("Error parsing bootllm.yml: %s", err),
+			Message: fmt.Sprintf("Error parsing bootlab.yml: %s", err),
 		}
 	}
 

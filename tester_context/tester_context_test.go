@@ -5,8 +5,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/bootllm/tester-utils/test_case_harness"
-	"github.com/bootllm/tester-utils/tester_definition"
+	"github.com/bootlab-dev/bootlab-tester-utils/test_case_harness"
+	"github.com/bootlab-dev/bootlab-tester-utils/tester_definition"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -18,7 +18,7 @@ func TestDefaultRepositoryDir(t *testing.T) {
 		},
 	}
 
-	// 不设置 BOOTLLM_REPOSITORY_DIR，应该默认为 "."
+	// 不设置 BOOTLAB_REPOSITORY_DIR，应该默认为 "."
 	context, err := GetTesterContext(map[string]string{}, definition)
 
 	if !assert.NoError(t, err) {
@@ -38,7 +38,7 @@ func TestDefaultRunAllStages(t *testing.T) {
 	}
 
 	context, err := GetTesterContext(map[string]string{
-		"BOOTLLM_REPOSITORY_DIR": "./test_helpers/valid_app_dir",
+		"BOOTLAB_REPOSITORY_DIR": "./test_helpers/valid_app_dir",
 	}, definition)
 
 	if !assert.NoError(t, err) {
@@ -65,8 +65,8 @@ func TestSingleStageMode(t *testing.T) {
 	}
 
 	context, err := GetTesterContext(map[string]string{
-		"BOOTLLM_REPOSITORY_DIR": "./test_helpers/valid_app_dir",
-		"BOOTLLM_STAGE":          "mario-less",
+		"BOOTLAB_REPOSITORY_DIR": "./test_helpers/valid_app_dir",
+		"BOOTLAB_STAGE":          "mario-less",
 	}, definition)
 
 	if !assert.NoError(t, err) {
@@ -88,8 +88,8 @@ func TestSingleStageMode_NotFound(t *testing.T) {
 	}
 
 	_, err := GetTesterContext(map[string]string{
-		"BOOTLLM_REPOSITORY_DIR": "./test_helpers/valid_app_dir",
-		"BOOTLLM_STAGE":          "nonexistent",
+		"BOOTLAB_REPOSITORY_DIR": "./test_helpers/valid_app_dir",
+		"BOOTLAB_STAGE":          "nonexistent",
 	}, definition)
 
 	assert.Error(t, err)
@@ -98,8 +98,8 @@ func TestSingleStageMode_NotFound(t *testing.T) {
 
 func TestSuccessParsingTestCases(t *testing.T) {
 	context, err := GetTesterContext(map[string]string{
-		"BOOTLLM_TEST_CASES_JSON": `[{ "slug": "test", "tester_log_prefix": "test", "title": "Test"}]`,
-		"BOOTLLM_REPOSITORY_DIR":  "./test_helpers/valid_app_dir",
+		"BOOTLAB_TEST_CASES_JSON": `[{ "slug": "test", "tester_log_prefix": "test", "title": "Test"}]`,
+		"BOOTLAB_REPOSITORY_DIR":  "./test_helpers/valid_app_dir",
 	}, tester_definition.TesterDefinition{})
 	if !assert.NoError(t, err) {
 		t.FailNow()
@@ -122,9 +122,9 @@ func TestJSONModeTakesPrecedence(t *testing.T) {
 
 	// 同时设置 JSON 和 STAGE，JSON 应该优先
 	context, err := GetTesterContext(map[string]string{
-		"BOOTLLM_TEST_CASES_JSON": `[{ "slug": "custom", "tester_log_prefix": "custom", "title": "Custom"}]`,
-		"BOOTLLM_REPOSITORY_DIR":  "./test_helpers/valid_app_dir",
-		"BOOTLLM_STAGE":           "hello",
+		"BOOTLAB_TEST_CASES_JSON": `[{ "slug": "custom", "tester_log_prefix": "custom", "title": "Custom"}]`,
+		"BOOTLAB_REPOSITORY_DIR":  "./test_helpers/valid_app_dir",
+		"BOOTLAB_STAGE":           "hello",
 	}, definition)
 
 	if !assert.NoError(t, err) {
@@ -164,8 +164,8 @@ func TestCorrectExecutable(t *testing.T) {
 
 	for _, tt := range tests {
 		context, err := GetTesterContext(map[string]string{
-			"BOOTLLM_TEST_CASES_JSON": `[{ "slug": "test", "tester_log_prefix": "test", "title": "Test"}]`,
-			"BOOTLLM_REPOSITORY_DIR":  fmt.Sprintf("./test_helpers/%s", tt.submissionDir),
+			"BOOTLAB_TEST_CASES_JSON": `[{ "slug": "test", "tester_log_prefix": "test", "title": "Test"}]`,
+			"BOOTLAB_REPOSITORY_DIR":  fmt.Sprintf("./test_helpers/%s", tt.submissionDir),
 		}, tester_definition.TesterDefinition{
 			ExecutableFileName:       "your_program.sh",
 			LegacyExecutableFileName: "spawn_redis_server.sh",

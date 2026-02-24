@@ -6,13 +6,13 @@ import (
 	"os"
 	"strings"
 
-	"github.com/bootllm/tester-utils/executable"
-	"github.com/bootllm/tester-utils/internal"
-	"github.com/bootllm/tester-utils/logger"
-	"github.com/bootllm/tester-utils/random"
-	"github.com/bootllm/tester-utils/test_runner"
-	"github.com/bootllm/tester-utils/tester_context"
-	"github.com/bootllm/tester-utils/tester_definition"
+	"github.com/bootlab-dev/bootlab-tester-utils/executable"
+	"github.com/bootlab-dev/bootlab-tester-utils/internal"
+	"github.com/bootlab-dev/bootlab-tester-utils/logger"
+	"github.com/bootlab-dev/bootlab-tester-utils/random"
+	"github.com/bootlab-dev/bootlab-tester-utils/test_runner"
+	"github.com/bootlab-dev/bootlab-tester-utils/tester_context"
+	"github.com/bootlab-dev/bootlab-tester-utils/tester_definition"
 	"github.com/fatih/color"
 )
 
@@ -29,7 +29,7 @@ func newTester(env map[string]string, definition tester_definition.TesterDefinit
 			return Tester{}, fmt.Errorf("%s", userError.Message)
 		}
 
-		return Tester{}, fmt.Errorf("BootLLM internal error. Error fetching tester context: %v", err)
+		return Tester{}, fmt.Errorf("BootLab internal error. Error fetching tester context: %v", err)
 	}
 
 	tester := Tester{
@@ -38,7 +38,7 @@ func newTester(env map[string]string, definition tester_definition.TesterDefinit
 	}
 
 	if err := tester.validateContext(); err != nil {
-		return Tester{}, fmt.Errorf("BootLLM internal error. Error validating tester context: %v", err)
+		return Tester{}, fmt.Errorf("BootLab internal error. Error validating tester context: %v", err)
 	}
 
 	return tester, nil
@@ -90,10 +90,10 @@ func MergeArgsIntoEnv(args CLIArgs, env map[string]string) map[string]string {
 	}
 
 	if args.Stage != "" {
-		result["BOOTLLM_STAGE"] = args.Stage
+		result["BOOTLAB_STAGE"] = args.Stage
 	}
 	if args.Dir != "" {
-		result["BOOTLLM_REPOSITORY_DIR"] = args.Dir
+		result["BOOTLAB_REPOSITORY_DIR"] = args.Dir
 	}
 
 	return result
@@ -107,9 +107,9 @@ func MergeArgsIntoEnv(args CLIArgs, env map[string]string) map[string]string {
 //	os.Exit(tester_utils.Run(os.Args[1:], definition))
 func Run(args []string, definition tester_definition.TesterDefinition) int {
 	// Configure streaming logs if enabled by Worker
-	// When BOOTLLM_STREAM_LOGS=1, redirect stdout to stderr and disable colors
+	// When BOOTLAB_STREAM_LOGS=1, redirect stdout to stderr and disable colors
 	// This allows Worker to capture all logs through stderr for real-time streaming
-	if os.Getenv("BOOTLLM_STREAM_LOGS") == "1" {
+	if os.Getenv("BOOTLAB_STREAM_LOGS") == "1" {
 		os.Stdout = os.Stderr // Redirect stdout to stderr
 		color.NoColor = true  // Disable ANSI color codes
 	}
