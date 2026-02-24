@@ -1,32 +1,32 @@
 # BootLab Tester Utils
 
-BootLab 课程测试工具的共享框架模块。
+A shared framework module for BootLab course testing tools.
 
-**基于：** [codecrafters-io/tester-utils](https://github.com/codecrafters-io/tester-utils)
+**Based on:** [codecrafters-io/tester-utils](https://github.com/codecrafters-io/tester-utils)
 
-**主要改进：**
+**Key improvements:**
 
-1. **灵活的运行模式** - 支持三种模式：
-   - 完整 JSON 格式（平台调度）
-   - 单个 stage 测试（开发调试）
-   - 运行全部测试（本地自测，默认）
+1. **Flexible run modes** - Three execution modes:
+   - Full JSON format (platform-dispatched)
+   - Single stage test (development/debugging)
+   - Run all tests (local self-test, default)
 
-2. **CLI 参数支持** - 新增命令行参数解析：
-   - 位置参数：`./tester hello`
-   - 标志参数：`./tester -s hello -d ~/work`
-   - 帮助/版本：`--help`, `--version`
+2. **CLI argument support** - Command-line argument parsing:
+   - Positional: `./tester hello`
+   - Flags: `./tester -s hello -d ~/work`
+   - Help/version: `--help`, `--version`
 
-3. **可选配置文件** - `bootlab.yml` 为可选（有合理默认值），而非强制要求
+3. **Optional config file** - `bootlab.yml` is optional (with sensible defaults), not mandatory
 
-4. **默认工作目录** - `BOOTLAB_REPOSITORY_DIR` 默认为当前目录 `.`，无需显式设置
+4. **Default working directory** - `BOOTLAB_REPOSITORY_DIR` defaults to current directory `.`, no explicit setup needed
 
-5. **新增 SubmissionDir** - `TestCaseHarness` 暴露学员提交目录，方便访问相对路径
+5. **New SubmissionDir** - `TestCaseHarness` exposes the student submission directory for easy relative path access
 
-6. **改进的 Runner API** - 增强的程序测试 API，支持本地可执行文件自动检测
+6. **Improved Runner API** - Enhanced program testing API with automatic local executable detection
 
 ---
 
-## 快速开始
+## Quick Start
 
 ```go
 package main
@@ -37,61 +37,61 @@ import (
 )
 
 func main() {
-    definition := GetDefinition() // 你的测试定义
+    definition := GetDefinition() // your test definition
     os.Exit(tester_utils.Run(os.Args[1:], definition))
 }
 ```
 
-## CLI 使用
+## CLI Usage
 
 ```bash
-# 运行所有测试
+# Run all tests
 ./tester
 
-# 运行指定 stage
+# Run a specific stage
 ./tester hello
 ./tester -s hello
 ./tester --stage hello
 
-# 指定工作目录
+# Specify working directory
 ./tester -d ./my-solution hello
 
-# 查看帮助
+# Show help
 ./tester --help
 ```
 
-## Runner 包
+## Runner Package
 
-流式 API 用于测试程序（类似 check50）：
+Fluent API for testing programs (similar to check50):
 
 ```go
 import "github.com/bootlab-dev/tester-utils/runner"
 
-// 基本用法
+// Basic usage
 err := runner.Run("./hello").
     Stdin("Alice").
     Stdout("hello, Alice").
     Exit(0)
 
-// PTY 支持
+// PTY support
 err := runner.Run("./mario").
     WithPty().
     Stdin("5").
     Stdout("#####").
     Exit(0)
 
-// 测试输入拒绝
+// Test input rejection
 err := runner.Run("./mario").
     Stdin("-1").
     Reject()
 ```
 
-## 环境变量
+## Environment Variables
 
-**流式日志支持** (Worker 集成):
+**Streaming log support** (Worker integration):
 
-- `BOOTLAB_STREAM_LOGS=1` - 禁用颜色并将 stdout 重定向到 stderr，便于 Worker 捕获实时日志流
+- `BOOTLAB_STREAM_LOGS=1` - Disables colors and redirects stdout to stderr, enabling the Worker to capture real-time log streams
 
-## 文档
+## Documentation
 
-详细 API 文档请查看 [GoDoc](https://pkg.go.dev/github.com/bootlab-dev/tester-utils)。
+For detailed API documentation, see [GoDoc](https://pkg.go.dev/github.com/bootlab-dev/tester-utils).
