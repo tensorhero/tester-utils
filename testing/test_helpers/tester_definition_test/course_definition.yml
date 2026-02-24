@@ -14,7 +14,7 @@ starter_repos:
   php: https://github.com/bootlab-dev/redis-starter-php
 
 marketing_intro_md: |-
-  This is the first BootLLM challenge. We're currently running [early
+  This is the first BootLab challenge. We're currently running [early
   access](/early-access) trials.
 
   In this challenge, you’ll build an application that can speak the Redis
@@ -27,7 +27,7 @@ stages:
     description_md: |-
       Let's start out with some basics.
 
-      In this stage, BootLLM will try to bind to port 6379, which is the default
+      In this stage, BootLab will try to bind to port 6379, which is the default
       port that Redis uses.
 
       Your task is to start a TCP server on port 6379. We'd like to make the first

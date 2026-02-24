@@ -224,7 +224,7 @@ func TestSegfaultInPty(t *testing.T) {
 	assert.Equal(t, 139, result.ExitCode)
 }
 
-func TestBootllmSecretEnvVarsFilteredInPty(t *testing.T) {
+func TestBootlabSecretEnvVarsFilteredInPty(t *testing.T) {
 	os.Setenv("BOOTLAB_SECRET_API_KEY", "secret-key-123")
 	os.Setenv("BOOTLAB_REPOSITORY_DIR", "/some/path")
 	os.Setenv("TEST_REGULAR_VAR", "regular-value")

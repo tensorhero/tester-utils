@@ -57,7 +57,7 @@ jobs:
           git checkout ${{ github.head_ref }}
 
       - name: Regenerate Fixtures
-        run: BOOTLLM_RECORD_FIXTURES=true make test
+        run: BOOTLAB_RECORD_FIXTURES=true make test
 
       - name: Update Fixtures
         run: |

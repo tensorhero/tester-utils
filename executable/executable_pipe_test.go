@@ -237,7 +237,7 @@ func TestMemoryLimit(t *testing.T) {
 	}
 }
 
-func TestBootllmSecretEnvVarsFiltered(t *testing.T) {
+func TestBootlabSecretEnvVarsFiltered(t *testing.T) {
 	os.Setenv("BOOTLAB_SECRET_API_KEY", "secret-key-123")
 	os.Setenv("BOOTLAB_REPOSITORY_DIR", "/some/path")
 	os.Setenv("TEST_REGULAR_VAR", "regular-value")

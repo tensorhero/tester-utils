@@ -46,7 +46,7 @@ runs:
 
     - name: Regenerate Fixtures
       shell: bash
-      run: BOOTLLM_RECORD_FIXTURES=true make test
+      run: BOOTLAB_RECORD_FIXTURES=true make test
 
     - name: Update Fixtures
       shell: bash
