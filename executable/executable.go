@@ -5,14 +5,14 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"io"
 	"os"
+	"os/exec"
 	"path/filepath"
 	"strings"
-	"time"
-
-	"io"
-	"os/exec"
+	"sync/atomic"
 	"syscall"
+	"time"
 
 	"github.com/bootlab-dev/tester-utils/linewriter"
 )
@@ -44,7 +44,7 @@ type Executable struct {
 	loggerFunc func(string)
 
 	// These are set & removed together
-	atleastOneReadDone bool
+	atleastOneReadDone atomic.Bool
 	memoryMonitor      *memoryMonitor // Monitors process memory usage and kills if limit exceeded
 	cmd                *exec.Cmd
 	ctxCancelFunc      context.CancelFunc
@@ -123,7 +123,7 @@ func (e *Executable) isRunning() bool {
 }
 
 func (e *Executable) HasExited() bool {
-	return e.atleastOneReadDone
+	return e.atleastOneReadDone.Load()
 }
 
 func (e *Executable) initializeStdioHandler() {
@@ -176,7 +176,7 @@ func (e *Executable) Start(args ...string) error {
 	e.memoryMonitor = newMemoryMonitor(e.MemoryLimitInBytes)
 
 	e.readDone = make(chan bool)
-	e.atleastOneReadDone = false
+	e.atleastOneReadDone.Store(false)
 
 	e.stdoutBytes = []byte{}
 	e.stdoutBuffer = bytes.NewBuffer(e.stdoutBytes)
@@ -245,7 +245,7 @@ func (e *Executable) setupIORelay(source io.Reader, destination1 io.Writer, dest
 			e.loggerFunc("Warning: Logs exceeded allowed limit, output might be truncated.\n")
 		}
 
-		e.atleastOneReadDone = true
+		e.atleastOneReadDone.Store(true)
 		e.readDone <- true
 		io.Copy(io.Discard, source) // Let's drain the stream in case any content is leftover
 	}()
@@ -323,7 +323,7 @@ func (e *Executable) Wait() (ExecutableResult, error) {
 		e.memoryMonitor.stop()
 		e.stdioHandler.CloseParentStreams()
 
-		e.atleastOneReadDone = false
+		e.atleastOneReadDone.Store(false)
 		e.cmd = nil
 		e.ctxCancelFunc = nil
 		e.ctxWithTimeout = nil
@@ -393,11 +393,15 @@ func (e *Executable) Kill() error {
 		return nil
 	}
 
+	// Capture cmd before spawning goroutine to avoid a race with Wait()'s
+	// deferred cleanup which sets e.cmd = nil.
+	cmd := e.cmd
+
 	doneChannel := make(chan error, 1)
 
 	go func() {
-		syscall.Kill(e.cmd.Process.Pid, syscall.SIGTERM)  // Don't know if this is required
-		syscall.Kill(-e.cmd.Process.Pid, syscall.SIGTERM) // Kill the whole process group
+		syscall.Kill(cmd.Process.Pid, syscall.SIGTERM)  // Don't know if this is required
+		syscall.Kill(-cmd.Process.Pid, syscall.SIGTERM) // Kill the whole process group
 		_, err := e.Wait()
 		doneChannel <- err
 	}()
@@ -407,14 +411,11 @@ func (e *Executable) Kill() error {
 	case doneError := <-doneChannel:
 		err = doneError
 	case <-time.After(2 * time.Second):
-		cmd := e.cmd
-		if cmd != nil {
-			err = fmt.Errorf("program failed to exit in 2 seconds after receiving sigterm")
-			syscall.Kill(cmd.Process.Pid, syscall.SIGKILL)  // Don't know if this is required
-			syscall.Kill(-cmd.Process.Pid, syscall.SIGKILL) // Kill the whole process group
+		err = fmt.Errorf("program failed to exit in 2 seconds after receiving sigterm")
+		syscall.Kill(cmd.Process.Pid, syscall.SIGKILL)  // Don't know if this is required
+		syscall.Kill(-cmd.Process.Pid, syscall.SIGKILL) // Kill the whole process group
 
-			<-doneChannel // Wait for Wait() to return
-		}
+		<-doneChannel // Wait for Wait() to return
 	}
 
 	return err

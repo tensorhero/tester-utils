@@ -7,13 +7,12 @@ import (
 )
 
 type LineWriter struct {
-	buffer           chan byte
-	flushableStrings chan string
-	writer           io.Writer
-	timeout          time.Duration
-	lastErr          error
-	flushChan        chan bool
-	flushedChan      chan bool
+	buffer      chan byte
+	writer      io.Writer
+	timeout     time.Duration
+	lastErr     error
+	flushChan   chan bool
+	flushedChan chan bool
 }
 
 // Write queues a string for writing
@@ -36,68 +35,53 @@ func (w *LineWriter) Flush() (err error) {
 // New returns a LineWriter instance
 func New(w io.Writer, timeout time.Duration) *LineWriter {
 	lw := &LineWriter{
-		buffer:           make(chan byte),
-		flushableStrings: make(chan string),
-		writer:           w,
-		timeout:          timeout,
-		flushChan:        make(chan bool),
-		flushedChan:      make(chan bool),
+		buffer:      make(chan byte),
+		writer:      w,
+		timeout:     timeout,
+		flushChan:   make(chan bool),
+		flushedChan: make(chan bool),
 	}
-	lw.startReader()
 	lw.startWriter()
 	return lw
 }
 
-func (w *LineWriter) startReader() {
+// startWriter runs a single goroutine that accumulates bytes, flushes on newline
+// or timeout, and handles explicit Flush() calls. All writes to w.writer happen
+// in this one goroutine, eliminating concurrent-write races.
+func (w *LineWriter) startWriter() {
 	go func(w *LineWriter) {
 		accumulated := bytes.NewBuffer([]byte{})
+
+		flushAccumulated := func() {
+			if accumulated.Len() > 0 {
+				_, err := w.writer.Write(accumulated.Bytes())
+				if err != nil {
+					w.lastErr = err
+				}
+				accumulated = bytes.NewBuffer([]byte{})
+			}
+		}
 
 	loop:
 		for {
 			select {
 			case b := <-w.buffer:
 				accumulated.WriteByte(b)
-
-				if string(b) == "\n" {
-					w.flushableStrings <- accumulated.String()
-					accumulated = bytes.NewBuffer([]byte{})
+				if b == '\n' {
+					flushAccumulated()
 				}
 			case <-time.After(w.timeout):
 				if accumulated.Len() > 0 {
 					accumulated.WriteByte('\n')
-					w.flushableStrings <- accumulated.String()
-					accumulated = bytes.NewBuffer([]byte{})
+					flushAccumulated()
 				}
 			case <-w.flushChan:
 				if accumulated.Len() > 0 {
 					accumulated.WriteByte('\n')
-					w.flushableStrings <- accumulated.String()
-					accumulated = bytes.NewBuffer([]byte{})
+					flushAccumulated()
 				}
-				close(w.flushableStrings)
+				w.flushedChan <- true
 				break loop
-			}
-		}
-	}(w)
-}
-
-func (w *LineWriter) startWriter() {
-	go func(w *LineWriter) {
-	loop:
-		for {
-			select {
-			case str, more := <-w.flushableStrings:
-				if str != "" {
-					_, err := w.writer.Write([]byte(str))
-					if err != nil {
-						w.lastErr = err
-					}
-				}
-
-				if !more {
-					w.flushedChan <- true
-					break loop
-				}
 			}
 		}
 	}(w)
