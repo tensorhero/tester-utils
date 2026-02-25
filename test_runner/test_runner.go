@@ -55,6 +55,34 @@ func (r TestRunner) Run(isDebug bool, executable *executable.Executable) bool {
 		logger := testCaseHarness.Logger
 		logger.Infof("Running tests for %s", step.Title)
 
+		// ========== Phase 1: RequiredFiles ==========
+		if len(step.TestCase.RequiredFiles) > 0 {
+			if err := r.checkRequiredFiles(&testCaseHarness, step.TestCase.RequiredFiles); err != nil {
+				r.reportTestError(err, isDebug, logger)
+				testCaseHarness.RunTeardownFuncs()
+				return false
+			}
+		}
+
+		// ========== Phase 2: CompileStep (with 30s timeout) ==========
+		if step.TestCase.CompileStep != nil {
+			if err := r.runCompileStepWithTimeout(&testCaseHarness, step.TestCase.CompileStep, defaultCompileTimeout); err != nil {
+				r.reportTestError(err, isDebug, logger)
+				testCaseHarness.RunTeardownFuncs()
+				return false
+			}
+		}
+
+		// ========== Phase 3: BeforeFunc (with panic recovery) ==========
+		if step.TestCase.BeforeFunc != nil {
+			if err := r.safeRunBeforeFunc(&testCaseHarness, step.TestCase.BeforeFunc); err != nil {
+				r.reportTestError(err, isDebug, logger)
+				testCaseHarness.RunTeardownFuncs()
+				return false
+			}
+		}
+
+		// ========== Phase 4: TestFunc (original logic) ==========
 		stepResultChannel := make(chan error, 1)
 		go func() {
 			err := step.TestCase.TestFunc(&testCaseHarness)
