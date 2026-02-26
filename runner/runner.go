@@ -11,8 +11,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/bootlab-dev/tester-utils/executable"
-	"github.com/bootlab-dev/tester-utils/logger"
+	"github.com/hellobyte-dev/tester-utils/executable"
+	"github.com/hellobyte-dev/tester-utils/logger"
 )
 
 // Runner 提供类似 check50 的链式 API 来运行和测试程序

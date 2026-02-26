@@ -237,15 +237,15 @@ func TestMemoryLimit(t *testing.T) {
 	}
 }
 
-func TestBootlabSecretEnvVarsFiltered(t *testing.T) {
-	os.Setenv("BOOTLAB_SECRET_API_KEY", "secret-key-123")
-	os.Setenv("BOOTLAB_REPOSITORY_DIR", "/some/path")
+func TestHellobbyteSecretEnvVarsFiltered(t *testing.T) {
+	os.Setenv("HELLOBYTE_SECRET_API_KEY", "secret-key-123")
+	os.Setenv("HELLOBYTE_REPOSITORY_DIR", "/some/path")
 	os.Setenv("TEST_REGULAR_VAR", "regular-value")
 
 	defer func() {
-		os.Unsetenv("BOOTLAB_SECRET_API_KEY")
+		os.Unsetenv("HELLOBYTE_SECRET_API_KEY")
 		os.Unsetenv("TEST_REGULAR_VAR")
-		os.Unsetenv("BOOTLAB_REPOSITORY_DIR")
+		os.Unsetenv("HELLOBYTE_REPOSITORY_DIR")
 	}()
 
 	e := NewExecutable("env")
@@ -253,10 +253,10 @@ func TestBootlabSecretEnvVarsFiltered(t *testing.T) {
 	assert.NoError(t, err)
 	output := string(result.Stdout)
 
-	assert.NotContains(t, output, "BOOTLAB_SECRET_API_KEY")
+	assert.NotContains(t, output, "HELLOBYTE_SECRET_API_KEY")
 	assert.NotContains(t, output, "secret-key-123")
 	assert.Contains(t, output, "TEST_REGULAR_VAR=regular-value")
-	assert.Contains(t, output, "BOOTLAB_REPOSITORY_DIR=/some/path")
+	assert.Contains(t, output, "HELLOBYTE_REPOSITORY_DIR=/some/path")
 }
 
 func TestPathResolutionWithDifferentWorkingDir(t *testing.T) {

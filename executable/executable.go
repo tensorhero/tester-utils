@@ -14,7 +14,7 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/bootlab-dev/tester-utils/linewriter"
+	"github.com/hellobyte-dev/tester-utils/linewriter"
 )
 
 // Executable represents a program that can be executed
@@ -421,14 +421,14 @@ func (e *Executable) Kill() error {
 	return err
 }
 
-// getSafeEnvironmentVariables filters out environment variables starting with BOOTLAB_SECRET
+// getSafeEnvironmentVariables filters out environment variables starting with HELLOBYTE_SECRET
 func getSafeEnvironmentVariables() []string {
 	allEnvVars := os.Environ()
 	safeEnvVars := make([]string, 0, len(allEnvVars))
 
 	for _, envVar := range allEnvVars {
-		// Filter out environment variables starting with `BOOTLAB_SECRET`
-		if !strings.HasPrefix(envVar, "BOOTLAB_SECRET") {
+		// Filter out environment variables starting with `HELLOBYTE_SECRET`
+		if !strings.HasPrefix(envVar, "HELLOBYTE_SECRET") {
 			safeEnvVars = append(safeEnvVars, envVar)
 		}
 	}

@@ -3,7 +3,7 @@ package test_runner
 import (
 	"fmt"
 
-	"github.com/bootlab-dev/tester-utils/test_case_harness"
+	"github.com/hellobyte-dev/tester-utils/test_case_harness"
 )
 
 // checkRequiredFiles verifies that all required files exist in the submission directory.

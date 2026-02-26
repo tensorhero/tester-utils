@@ -5,8 +5,8 @@ import (
 	"os/exec"
 	"time"
 
-	"github.com/bootlab-dev/tester-utils/test_case_harness"
-	"github.com/bootlab-dev/tester-utils/tester_definition"
+	"github.com/hellobyte-dev/tester-utils/test_case_harness"
+	"github.com/hellobyte-dev/tester-utils/tester_definition"
 )
 
 // defaultCompileTimeout is the hard timeout for compilation steps.

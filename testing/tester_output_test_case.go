@@ -8,9 +8,9 @@ import (
 	"strings"
 	"testing"
 
-	tester_utils "github.com/bootlab-dev/tester-utils"
-	"github.com/bootlab-dev/tester-utils/stdio_mocker"
-	"github.com/bootlab-dev/tester-utils/tester_definition"
+	tester_utils "github.com/hellobyte-dev/tester-utils"
+	"github.com/hellobyte-dev/tester-utils/stdio_mocker"
+	"github.com/hellobyte-dev/tester-utils/tester_definition"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -135,9 +135,9 @@ func runCLIStage(testerDefinition tester_definition.TesterDefinition, testCasesJ
 	}
 
 	return tester_utils.RunCLI(map[string]string{
-		"BOOTLAB_TEST_CASES_JSON": testCasesJson,
-		"BOOTLAB_REPOSITORY_DIR":  path,
-		"BOOTLAB_SKIP_ANTI_CHEAT": strconv.FormatBool(skipAntiCheat),
+		"HELLOBYTE_TEST_CASES_JSON": testCasesJson,
+		"HELLOBYTE_REPOSITORY_DIR":  path,
+		"HELLOBYTE_SKIP_ANTI_CHEAT": strconv.FormatBool(skipAntiCheat),
 	}, testerDefinition)
 }
 

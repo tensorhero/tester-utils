@@ -3,7 +3,7 @@ package tester_definition
 import (
 	"time"
 
-	"github.com/bootlab-dev/tester-utils/test_case_harness"
+	"github.com/hellobyte-dev/tester-utils/test_case_harness"
 )
 
 // CompileStep declares a compilation step to be executed by the framework
@@ -25,7 +25,7 @@ type CompileStep struct {
 	// Flags are extra compiler flags appended (not replacing) after the default flags.
 	Flags []string
 
-	// IncludeParentDir adds -I.. to include the parent directory (e.g. for bootlab.h).
+	// IncludeParentDir adds -I.. to include the parent directory (e.g. for hellobyte.h).
 	IncludeParentDir bool
 }
 

@@ -8,11 +8,11 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/bootlab-dev/tester-utils/executable"
+	"github.com/hellobyte-dev/tester-utils/executable"
 )
 
 func CompareOutputWithFixture(t *testing.T, testerOutput []byte, normalizeOutputFunc func([]byte) []byte, fixturePath string) {
-	shouldRecordFixture := os.Getenv("BOOTLAB_RECORD_FIXTURES") == "true"
+	shouldRecordFixture := os.Getenv("HELLOBYTE_RECORD_FIXTURES") == "true"
 
 	fixtureContents, err := os.ReadFile(fixturePath)
 	if err != nil {
@@ -21,7 +21,7 @@ func CompareOutputWithFixture(t *testing.T, testerOutput []byte, normalizeOutput
 				writeOrOverwriteFixture(fixturePath, testerOutput)
 				return
 			} else {
-				t.Errorf("Fixture file %s does not exist. To create a new one, use BOOTLAB_RECORD_FIXTURES=true", fixturePath)
+				t.Errorf("Fixture file %s does not exist. To create a new one, use HELLOBYTE_RECORD_FIXTURES=true", fixturePath)
 				return
 			}
 		}
@@ -76,7 +76,7 @@ func CompareOutputWithFixture(t *testing.T, testerOutput []byte, normalizeOutput
 
 	os.Stdout.Write([]byte("\n\nDifferences detected:\n\n"))
 	os.Stdout.Write(diffContents)
-	os.Stdout.Write([]byte("\n\nRe-run this test with BOOTLAB_RECORD_FIXTURES=true to update fixtures\n\n"))
+	os.Stdout.Write([]byte("\n\nRe-run this test with HELLOBYTE_RECORD_FIXTURES=true to update fixtures\n\n"))
 	t.FailNow()
 }
 

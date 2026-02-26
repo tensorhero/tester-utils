@@ -1,6 +1,6 @@
-# BootLab Tester Utils
+# HelloByte Tester Utils
 
-A shared framework module for BootLab course testing tools.
+A shared framework module for HelloByte course testing tools.
 
 **Based on:** [codecrafters-io/tester-utils](https://github.com/codecrafters-io/tester-utils)
 
@@ -10,7 +10,7 @@ A shared framework module for BootLab course testing tools.
 - **Fluent Runner API** — check50-style program testing with blocking, interactive, and PTY modes
 - **Flexible run modes** — platform-dispatched (JSON), single stage, or run-all (default)
 - **CLI support** — `./tester hello`, `./tester -s hello -d ~/work`, `--help`
-- **Sensible defaults** — `bootlab.yml` optional, working directory defaults to `.`
+- **Sensible defaults** — `hellobyte.yml` optional, working directory defaults to `.`
 
 ## Quick Start
 
@@ -19,8 +19,8 @@ package main
 
 import (
     "os"
-    tester_utils "github.com/bootlab-dev/tester-utils"
-    "github.com/bootlab-dev/tester-utils/tester_definition"
+    tester_utils "github.com/hellobyte-dev/tester-utils"
+    "github.com/hellobyte-dev/tester-utils/tester_definition"
 )
 
 func main() {
@@ -81,7 +81,7 @@ Default C flags (`-lm -Wall -Werror`) are always applied; `Flags` appends extra 
 Fluent API for testing programs:
 
 ```go
-import "github.com/bootlab-dev/tester-utils/runner"
+import "github.com/hellobyte-dev/tester-utils/runner"
 
 // Blocking mode — send stdin, check stdout + exit code
 err := runner.Run(workDir, "hello").
@@ -123,10 +123,10 @@ err := runner.CompileC(workDir, "hello.c", "hello", "-I..")
 
 | Variable | Description |
 |----------|-------------|
-| `BOOTLAB_REPOSITORY_DIR` | Working directory (default: `.`) |
-| `BOOTLAB_STREAM_LOGS=1` | Disable colors, redirect stdout→stderr for Worker log streaming |
+| `HELLOBYTE_REPOSITORY_DIR` | Working directory (default: `.`) |
+| `HELLOBYTE_STREAM_LOGS=1` | Disable colors, redirect stdout→stderr for Worker log streaming |
 
 ## Documentation
 
-- [GoDoc](https://pkg.go.dev/github.com/bootlab-dev/tester-utils)
+- [GoDoc](https://pkg.go.dev/github.com/hellobyte-dev/tester-utils)
 - [4-Phase Pipeline Design](docs/4-phase-pipeline/design.md)
