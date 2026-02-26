@@ -207,7 +207,7 @@ T1.1 ──→ T1.2 ──→ T1.4 ──→ T1.5 ──→ T2.1 ──→ T3.1
 
 | 编号 | 任务 | 前置条件 | 优先级 |
 |------|------|---------|--------|
-| F1 | files_config 数据驱动（P1-B: BOOTLAB_FILES_CONFIG 环境变量） | Worker 支持注入 | P1 |
+| F1 | files_config 数据驱动（P1-B: HELLOBYTE_FILES_CONFIG 环境变量） | Worker 支持注入 | P1 |
 | F2 | files_config.allowed glob 白名单检查 | F1 | P1 |
 | F3 | files_config.blocked glob 黑名单检查 | F1 | P1 |
 | F4 | BeforeAll/AfterAll 全局 Hook | 有实际需求时 | P2 |

@@ -34,7 +34,7 @@ package tester_definition
 
 import (
     "time"
-    "github.com/bootlab-dev/tester-utils/test_case_harness"
+    "github.com/hellobyte-dev/tester-utils/test_case_harness"
 )
 
 // CompileStep 声明编译步骤
@@ -55,7 +55,7 @@ type CompileStep struct {
     // Flags 额外编译参数（追加到默认 flags 之后，不是覆盖）
     Flags []string
 
-    // IncludeParentDir 是否添加 -I.. 引入父目录（用于 bootlab.h）
+    // IncludeParentDir 是否添加 -I.. 引入父目录（用于 hellobyte.h）
     IncludeParentDir bool
 }
 
@@ -362,7 +362,7 @@ func testHello(harness *test_case_harness.TestCaseHarness) error {
 | Stage 类型 | RequiredFiles | CompileStep | BeforeFunc | 示例 |
 |-----------|---------------|-------------|------------|------|
 | **简单 C** | `["hello.c"]` | `{Language:"c", Source:"hello.c", Output:"hello"}` | nil | hello, cash, credit |
-| **C + bootlab.h** | `["mario.c"]` | `{Language:"c", ..., IncludeParentDir:true}` | nil | mario-less/more, scrabble |
+| **C + hellobyte.h** | `["mario.c"]` | `{Language:"c", ..., IncludeParentDir:true}` | nil | mario-less/more, scrabble |
 | **C + 多文件** | `["helpers.c","bmp.h","helpers.h","testing.c"]` | `{Language:"c", Source:"testing.c helpers.c", ...}` | 用 BeforeFunc 自定义编译 | filter-less/more |
 | **C + make** | `["dictionary.c"]` | `{Language:"make", Output:"speller"}` | nil | speller |
 | **Python** | `["hello.py"]` | nil（不需要编译） | nil | sentimental-* |
@@ -416,7 +416,7 @@ files_config:                      RequiredFiles: []string{
 Worker                          Tester 容器
 ──────                          ──────────
 docker run ... \
-  -e BOOTLAB_FILES_CONFIG='     tester-utils 解析 JSON
+  -e HELLOBYTE_FILES_CONFIG='     tester-utils 解析 JSON
     {"required":["caesar.c"],   → Phase 0: 自动校验
      "allowed":["*.h"],             required: 文件存在检查
      "blocked":["*.py"]}'          allowed: glob 白名单
@@ -427,7 +427,7 @@ docker run ... \
 
 ```go
 // Phase 0: 环境变量驱动的 files_config 校验
-if filesConfigJSON := os.Getenv("BOOTLAB_FILES_CONFIG"); filesConfigJSON != "" {
+if filesConfigJSON := os.Getenv("HELLOBYTE_FILES_CONFIG"); filesConfigJSON != "" {
     if err := r.validateFilesConfig(filesConfigJSON); err != nil {
         return false
     }
@@ -442,12 +442,12 @@ if filesConfigJSON := os.Getenv("BOOTLAB_FILES_CONFIG"); filesConfigJSON != "" {
 | 仅 P1-B（有 env var） | 执行 required + allowed + blocked | 跳过 | 后续阶段 |
 | P1-A + P1-B 共存 | 执行（以 env var 为准） | **跳过** | env var 优先 |
 
-**原则**：`BOOTLAB_FILES_CONFIG` 环境变量一旦存在，其 `required` 字段 **取代** `TestCase.RequiredFiles`（而非合并），因为数据源应该是 single source of truth。Phase 1 的 RequiredFiles 仅作为 env var 不存在时的回退。
+**原则**：`HELLOBYTE_FILES_CONFIG` 环境变量一旦存在，其 `required` 字段 **取代** `TestCase.RequiredFiles`（而非合并），因为数据源应该是 single source of truth。Phase 1 的 RequiredFiles 仅作为 env var 不存在时的回退。
 
 ## 6. 文件组织
 
 ```
-bootlab-tester-utils/
+hellobyte-tester-utils/
 ├── tester_definition/
 │   └── tester_definition.go    # 修改: 增加 RequiredFiles, CompileStep, BeforeFunc
 ├── test_runner/
