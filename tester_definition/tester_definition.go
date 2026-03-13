@@ -3,7 +3,7 @@ package tester_definition
 import (
 	"time"
 
-	"github.com/hellobyte-dev/tester-utils/test_case_harness"
+	"github.com/tensorhero-dev/tensorhero-tester-utils/test_case_harness"
 )
 
 // CompileStep declares a compilation step to be executed by the framework
@@ -25,7 +25,7 @@ type CompileStep struct {
 	// Flags are extra compiler flags appended (not replacing) after the default flags.
 	Flags []string
 
-	// IncludeParentDir adds -I.. to include the parent directory (e.g. for hellobyte.h).
+	// IncludeParentDir adds -I.. to include the parent directory (e.g. for tensorhero.h).
 	IncludeParentDir bool
 }
 
@@ -85,12 +85,12 @@ type TesterDefinition struct {
 	AntiCheatTestCases []TestCase
 }
 
-func (t TesterDefinition) TestCaseBySlug(slug string) TestCase {
+func (t TesterDefinition) TestCaseBySlug(slug string) (TestCase, bool) {
 	for _, testCase := range t.TestCases {
 		if testCase.Slug == slug {
-			return testCase
+			return testCase, true
 		}
 	}
 
-	return TestCase{}
+	return TestCase{}, false
 }

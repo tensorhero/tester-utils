@@ -14,7 +14,7 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/hellobyte-dev/tester-utils/linewriter"
+	"github.com/tensorhero-dev/tensorhero-tester-utils/linewriter"
 )
 
 // Executable represents a program that can be executed
@@ -97,6 +97,9 @@ func (e *Executable) Clone() *Executable {
 
 // DefaultMemoryLimitInBytes is the default memory limit (2GB)
 const DefaultMemoryLimitInBytes int64 = 2 * 1024 * 1024 * 1024
+
+// maxOutputBytes is the maximum bytes captured from stdout/stderr (~30KB)
+const maxOutputBytes int64 = 30000
 
 // NewExecutable returns an Executable
 func NewExecutable(path string) *Executable {
@@ -230,18 +233,17 @@ func (e *Executable) Start(args ...string) error {
 func (e *Executable) setupIORelay(source io.Reader, destination1 io.Writer, destination2 io.Writer) {
 	go func() {
 		combinedDestination := io.MultiWriter(destination1, destination2)
-		// Limit to 30KB (~250 lines at 120 chars per line)
-		bytesWritten, err := io.Copy(combinedDestination, io.LimitReader(source, 30000))
+		bytesWritten, err := io.Copy(combinedDestination, io.LimitReader(source, maxOutputBytes))
 		if err != nil {
 			// In linux, if the source is a terminal device, read(2) results in EIO when the child process has exited and closed its slave end
 			// (Source: The Linux Programming Interface Appendix F - 64.1)
 			// This can be safely ignored
 			if !(isTTY(source) && errors.Is(err, syscall.EIO)) {
-				panic(err)
+				e.loggerFunc(fmt.Sprintf("Warning: IO relay error: %v\n", err))
 			}
 		}
 
-		if bytesWritten == 30000 {
+		if bytesWritten == maxOutputBytes {
 			e.loggerFunc("Warning: Logs exceeded allowed limit, output might be truncated.\n")
 		}
 
@@ -421,14 +423,14 @@ func (e *Executable) Kill() error {
 	return err
 }
 
-// getSafeEnvironmentVariables filters out environment variables starting with HELLOBYTE_SECRET
+// getSafeEnvironmentVariables filters out environment variables starting with TENSORHERO_SECRET
 func getSafeEnvironmentVariables() []string {
 	allEnvVars := os.Environ()
 	safeEnvVars := make([]string, 0, len(allEnvVars))
 
 	for _, envVar := range allEnvVars {
-		// Filter out environment variables starting with `HELLOBYTE_SECRET`
-		if !strings.HasPrefix(envVar, "HELLOBYTE_SECRET") {
+		// Filter out environment variables starting with `TENSORHERO_SECRET`
+		if !strings.HasPrefix(envVar, "TENSORHERO_SECRET") {
 			safeEnvVars = append(safeEnvVars, envVar)
 		}
 	}

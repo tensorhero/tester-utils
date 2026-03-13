@@ -225,14 +225,14 @@ func TestSegfaultInPty(t *testing.T) {
 }
 
 func TestHellobbyteSecretEnvVarsFilteredInPty(t *testing.T) {
-	os.Setenv("HELLOBYTE_SECRET_API_KEY", "secret-key-123")
-	os.Setenv("HELLOBYTE_REPOSITORY_DIR", "/some/path")
+	os.Setenv("TENSORHERO_SECRET_API_KEY", "secret-key-123")
+	os.Setenv("TENSORHERO_REPOSITORY_DIR", "/some/path")
 	os.Setenv("TEST_REGULAR_VAR", "regular-value")
 
 	defer func() {
-		os.Unsetenv("HELLOBYTE_SECRET_API_KEY")
+		os.Unsetenv("TENSORHERO_SECRET_API_KEY")
 		os.Unsetenv("TEST_REGULAR_VAR")
-		os.Unsetenv("HELLOBYTE_REPOSITORY_DIR")
+		os.Unsetenv("TENSORHERO_REPOSITORY_DIR")
 	}()
 
 	e := getNewExecutableForPTYTests("env")
@@ -240,10 +240,10 @@ func TestHellobbyteSecretEnvVarsFilteredInPty(t *testing.T) {
 	assert.NoError(t, err)
 	output := string(result.Stdout)
 
-	assert.NotContains(t, output, "HELLOBYTE_SECRET_API_KEY")
+	assert.NotContains(t, output, "TENSORHERO_SECRET_API_KEY")
 	assert.NotContains(t, output, "secret-key-123")
 	assert.Contains(t, output, "TEST_REGULAR_VAR=regular-value")
-	assert.Contains(t, output, "HELLOBYTE_REPOSITORY_DIR=/some/path")
+	assert.Contains(t, output, "TENSORHERO_REPOSITORY_DIR=/some/path")
 }
 
 func TestPathResolutionWithDifferentWorkingDirInPty(t *testing.T) {

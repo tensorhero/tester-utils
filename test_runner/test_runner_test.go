@@ -7,10 +7,10 @@ import (
 	"testing"
 	"time"
 
-	"github.com/hellobyte-dev/tester-utils/executable"
-	"github.com/hellobyte-dev/tester-utils/logger"
-	"github.com/hellobyte-dev/tester-utils/test_case_harness"
-	"github.com/hellobyte-dev/tester-utils/tester_definition"
+	"github.com/tensorhero-dev/tensorhero-tester-utils/executable"
+	"github.com/tensorhero-dev/tensorhero-tester-utils/logger"
+	"github.com/tensorhero-dev/tensorhero-tester-utils/test_case_harness"
+	"github.com/tensorhero-dev/tensorhero-tester-utils/tester_definition"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )

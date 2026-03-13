@@ -8,13 +8,13 @@ description_md: |-
 
 supported_languages: ["python", "go", "php"]
 starter_repos:
-  python: https://github.com/hellobyte-dev/redis-starter-py
-  swift: https://github.com/hellobyte-dev/redis-starter-swift
-  go: https://github.com/hellobyte-dev/redis-starter-golang
-  php: https://github.com/hellobyte-dev/redis-starter-php
+  python: https://github.com/tensorhero-dev/redis-starter-py
+  swift: https://github.com/tensorhero-dev/redis-starter-swift
+  go: https://github.com/tensorhero-dev/redis-starter-golang
+  php: https://github.com/tensorhero-dev/redis-starter-php
 
 marketing_intro_md: |-
-  This is the first HelloByte challenge. We're currently running [early
+  This is the first TensorHero challenge. We're currently running [early
   access](/early-access) trials.
 
   In this challenge, you’ll build an application that can speak the Redis
@@ -27,7 +27,7 @@ stages:
     description_md: |-
       Let's start out with some basics.
 
-      In this stage, HelloByte will try to bind to port 6379, which is the default
+      In this stage, TensorHero will try to bind to port 6379, which is the default
       port that Redis uses.
 
       Your task is to start a TCP server on port 6379. We'd like to make the first

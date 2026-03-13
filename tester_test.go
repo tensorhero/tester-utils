@@ -6,8 +6,8 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/hellobyte-dev/tester-utils/test_case_harness"
-	"github.com/hellobyte-dev/tester-utils/tester_definition"
+	"github.com/tensorhero-dev/tensorhero-tester-utils/test_case_harness"
+	"github.com/tensorhero-dev/tensorhero-tester-utils/tester_definition"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -42,8 +42,8 @@ func TestAllStagesPass(t *testing.T) {
 		},
 	}
 	env := map[string]string{
-		"HELLOBYTE_REPOSITORY_DIR":  "./test_helpers/valid_app_dir",
-		"HELLOBYTE_TEST_CASES_JSON": buildTestCasesJson([]string{"test-1", "test-2"}),
+		"TENSORHERO_REPOSITORY_DIR":  "./test_helpers/valid_app_dir",
+		"TENSORHERO_TEST_CASES_JSON": buildTestCasesJson([]string{"test-1", "test-2"}),
 	}
 	exitCode := RunCLI(env, definition)
 	assert.Equal(t, exitCode, 0)
@@ -58,8 +58,8 @@ func TestOneStageFails(t *testing.T) {
 	}
 
 	env := map[string]string{
-		"HELLOBYTE_REPOSITORY_DIR":  "./test_helpers/valid_app_dir",
-		"HELLOBYTE_TEST_CASES_JSON": buildTestCasesJson([]string{"test-1", "test-2"}),
+		"TENSORHERO_REPOSITORY_DIR":  "./test_helpers/valid_app_dir",
+		"TENSORHERO_TEST_CASES_JSON": buildTestCasesJson([]string{"test-1", "test-2"}),
 	}
 	exitCode := RunCLI(env, definition)
 	assert.Equal(t, exitCode, 1)

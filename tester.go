@@ -6,15 +6,17 @@ import (
 	"os"
 	"strings"
 
-	"github.com/hellobyte-dev/tester-utils/executable"
-	"github.com/hellobyte-dev/tester-utils/internal"
-	"github.com/hellobyte-dev/tester-utils/logger"
-	"github.com/hellobyte-dev/tester-utils/random"
-	"github.com/hellobyte-dev/tester-utils/test_runner"
-	"github.com/hellobyte-dev/tester-utils/tester_context"
-	"github.com/hellobyte-dev/tester-utils/tester_definition"
+	"github.com/tensorhero-dev/tensorhero-tester-utils/executable"
+	"github.com/tensorhero-dev/tensorhero-tester-utils/internal"
+	"github.com/tensorhero-dev/tensorhero-tester-utils/logger"
+	"github.com/tensorhero-dev/tensorhero-tester-utils/random"
+	"github.com/tensorhero-dev/tensorhero-tester-utils/test_runner"
+	"github.com/tensorhero-dev/tensorhero-tester-utils/tester_context"
+	"github.com/tensorhero-dev/tensorhero-tester-utils/tester_definition"
 	"github.com/fatih/color"
 )
+
+var version = "dev"
 
 type Tester struct {
 	context    tester_context.TesterContext
@@ -29,7 +31,7 @@ func newTester(env map[string]string, definition tester_definition.TesterDefinit
 			return Tester{}, fmt.Errorf("%s", userError.Message)
 		}
 
-		return Tester{}, fmt.Errorf("HelloByte internal error. Error fetching tester context: %v", err)
+		return Tester{}, fmt.Errorf("TensorHero internal error. Error fetching tester context: %v", err)
 	}
 
 	tester := Tester{
@@ -38,7 +40,7 @@ func newTester(env map[string]string, definition tester_definition.TesterDefinit
 	}
 
 	if err := tester.validateContext(); err != nil {
-		return Tester{}, fmt.Errorf("HelloByte internal error. Error validating tester context: %v", err)
+		return Tester{}, fmt.Errorf("TensorHero internal error. Error validating tester context: %v", err)
 	}
 
 	return tester, nil
@@ -90,10 +92,10 @@ func MergeArgsIntoEnv(args CLIArgs, env map[string]string) map[string]string {
 	}
 
 	if args.Stage != "" {
-		result["HELLOBYTE_STAGE"] = args.Stage
+		result["TENSORHERO_STAGE"] = args.Stage
 	}
 	if args.Dir != "" {
-		result["HELLOBYTE_REPOSITORY_DIR"] = args.Dir
+		result["TENSORHERO_REPOSITORY_DIR"] = args.Dir
 	}
 
 	return result
@@ -107,9 +109,9 @@ func MergeArgsIntoEnv(args CLIArgs, env map[string]string) map[string]string {
 //	os.Exit(tester_utils.Run(os.Args[1:], definition))
 func Run(args []string, definition tester_definition.TesterDefinition) int {
 	// Configure streaming logs if enabled by Worker
-	// When HELLOBYTE_STREAM_LOGS=1, redirect stdout to stderr and disable colors
+	// When TENSORHERO_STREAM_LOGS=1, redirect stdout to stderr and disable colors
 	// This allows Worker to capture all logs through stderr for real-time streaming
-	if os.Getenv("HELLOBYTE_STREAM_LOGS") == "1" {
+	if os.Getenv("TENSORHERO_STREAM_LOGS") == "1" {
 		os.Stdout = os.Stderr // Redirect stdout to stderr
 		color.NoColor = true  // Disable ANSI color codes
 	}
@@ -122,7 +124,7 @@ func Run(args []string, definition tester_definition.TesterDefinition) int {
 	}
 
 	if cliArgs.Version {
-		fmt.Println("bcs100x-tester v0.1.0")
+		fmt.Printf("%s %s\n", definition.ExecutableFileName, version)
 		return 0
 	}
 
@@ -217,7 +219,7 @@ func (tester Tester) getRunner() test_runner.TestRunner {
 	steps := []test_runner.TestRunnerStep{}
 
 	for _, testerContextTestCase := range tester.context.TestCases {
-		definitionTestCase := tester.definition.TestCaseBySlug(testerContextTestCase.Slug)
+		definitionTestCase, _ := tester.definition.TestCaseBySlug(testerContextTestCase.Slug)
 
 		steps = append(steps, test_runner.TestRunnerStep{
 			TestCase:        definitionTestCase,
@@ -253,10 +255,8 @@ func (tester Tester) getExecutable() *executable.Executable {
 
 func (tester Tester) validateContext() error {
 	for _, testerContextTestCase := range tester.context.TestCases {
-		testerDefinitionTestCase := tester.definition.TestCaseBySlug(testerContextTestCase.Slug)
-
-		if testerDefinitionTestCase.Slug != testerContextTestCase.Slug {
-			return fmt.Errorf("tester context does not have test case with slug %s", testerContextTestCase.Slug)
+		if _, ok := tester.definition.TestCaseBySlug(testerContextTestCase.Slug); !ok {
+			return fmt.Errorf("tester definition does not have test case with slug %s", testerContextTestCase.Slug)
 		}
 	}
 

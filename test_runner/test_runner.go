@@ -4,10 +4,10 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/hellobyte-dev/tester-utils/executable"
-	"github.com/hellobyte-dev/tester-utils/logger"
-	"github.com/hellobyte-dev/tester-utils/test_case_harness"
-	"github.com/hellobyte-dev/tester-utils/tester_definition"
+	"github.com/tensorhero-dev/tensorhero-tester-utils/executable"
+	"github.com/tensorhero-dev/tensorhero-tester-utils/logger"
+	"github.com/tensorhero-dev/tensorhero-tester-utils/test_case_harness"
+	"github.com/tensorhero-dev/tensorhero-tester-utils/tester_definition"
 )
 
 type TestRunnerStep struct {
@@ -82,20 +82,21 @@ func (r TestRunner) Run(isDebug bool, executable *executable.Executable) bool {
 			}
 		}
 
-		// ========== Phase 4: TestFunc (original logic) ==========
+		// ========== Phase 4: TestFunc (with timeout) ==========
+		timeout := step.TestCase.CustomOrDefaultTimeout()
+		timer := time.NewTimer(timeout)
+
 		stepResultChannel := make(chan error, 1)
 		go func() {
-			err := step.TestCase.TestFunc(&testCaseHarness)
-			stepResultChannel <- err
+			stepResultChannel <- step.TestCase.TestFunc(&testCaseHarness)
 		}()
-
-		timeout := step.TestCase.CustomOrDefaultTimeout()
 
 		var err error
 		select {
 		case stageErr := <-stepResultChannel:
+			timer.Stop()
 			err = stageErr
-		case <-time.After(timeout):
+		case <-timer.C:
 			err = fmt.Errorf("timed out, test exceeded %d seconds", int64(timeout.Seconds()))
 		}
 
@@ -126,13 +127,4 @@ func (r TestRunner) getLoggerForStep(isDebug bool, step TestRunnerStep) *logger.
 func (r TestRunner) reportTestError(err error, isDebug bool, logger *logger.Logger) {
 	logger.Errorf("%s", err)
 	logger.Errorf("Test failed")
-}
-
-// Fuck you, go
-func min(a, b int) int {
-	if a < b {
-		return a
-	}
-
-	return b
 }

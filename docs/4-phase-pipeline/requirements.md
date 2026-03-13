@@ -42,7 +42,7 @@ files_config:
   blocked: ["*.py"]        # 禁止的文件（glob）
 ```
 
-数据流断链：`stage.yml → hellobyte-schema syncer → DB stages.files_config (JSONB) → ❌ 无消费端`
+数据流断链：`stage.yml → tensorhero-schema syncer → DB stages.files_config (JSONB) → ❌ 无消费端`
 
 ## 2. 需求目标
 
@@ -65,7 +65,7 @@ files_config:
 
 **验收标准：**
 - P1-A（硬编码）：tester 代码中的 `RequiredFiles` 与 `stage.yml` 的 `files_config.required` 保持一致
-- P1-B（数据驱动，后续）：Worker 通过 `HELLOBYTE_FILES_CONFIG` 环境变量注入 JSON，
+- P1-B（数据驱动，后续）：Worker 通过 `TENSORHERO_FILES_CONFIG` 环境变量注入 JSON，
   tester-utils 自动解析并在 TestFunc 前校验 `required/allowed/blocked`
 
 ### R3: BeforeFunc 自定义 Hook（P0 — 必须）
@@ -105,7 +105,7 @@ BeforeAll → [BeforeEach → TestFunc → AfterEach] × N → AfterAll
 |-------|------|
 | `files_config.allowed/blocked` 的 glob 匹配 | P1-B 阶段处理，当前只处理 `required` |
 | 多语言测试框架 | 独立需求，不在本次范围（见附录 A） |
-| Worker 侧 `HELLOBYTE_FILES_CONFIG` 注入 | 需 Worker + API 协同改造，P1-B 阶段 |
+| Worker 侧 `TENSORHERO_FILES_CONFIG` 注入 | 需 Worker + API 协同改造，P1-B 阶段 |
 | `TestCase` 依赖图（check50 风格 `@check(dependency)`） | 过度设计，当前线性执行足够 |
 
 ## 4. 业界参考

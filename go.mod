@@ -1,4 +1,4 @@
-module github.com/hellobyte-dev/tester-utils
+module github.com/tensorhero-dev/tensorhero-tester-utils
 
 go 1.24
 

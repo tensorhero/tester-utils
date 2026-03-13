@@ -4,13 +4,13 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/hellobyte-dev/tester-utils/executable"
-	"github.com/hellobyte-dev/tester-utils/logger"
+	"github.com/tensorhero-dev/tensorhero-tester-utils/executable"
+	"github.com/tensorhero-dev/tensorhero-tester-utils/logger"
 )
 
 // TestCaseHarness is passed to your TestCase's TestFunc.
 //
-// For HelloByte courses that don't use your_program.sh, use SubmissionDir directly:
+// For TensorHero courses that don't use your_program.sh, use SubmissionDir directly:
 //
 //	if !harness.FileExists("hello.c") {
 //	    return fmt.Errorf("hello.c does not exist")
