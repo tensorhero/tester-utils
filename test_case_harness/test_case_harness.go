@@ -4,8 +4,8 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/tensorhero-dev/tensorhero-tester-utils/executable"
-	"github.com/tensorhero-dev/tensorhero-tester-utils/logger"
+	"github.com/tensorhero/tester-utils/executable"
+	"github.com/tensorhero/tester-utils/logger"
 )
 
 // TestCaseHarness is passed to your TestCase's TestFunc.

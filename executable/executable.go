@@ -14,7 +14,7 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/tensorhero-dev/tensorhero-tester-utils/linewriter"
+	"github.com/tensorhero/tester-utils/linewriter"
 )
 
 // Executable represents a program that can be executed

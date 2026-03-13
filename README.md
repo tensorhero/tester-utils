@@ -19,8 +19,8 @@ package main
 
 import (
     "os"
-    tester_utils "github.com/tensorhero-dev/tensorhero-tester-utils"
-    "github.com/tensorhero-dev/tensorhero-tester-utils/tester_definition"
+    tester_utils "github.com/tensorhero/tester-utils"
+    "github.com/tensorhero/tester-utils/tester_definition"
 )
 
 func main() {
@@ -81,7 +81,7 @@ Default C flags (`-lm -Wall -Werror`) are always applied; `Flags` appends extra 
 Fluent API for testing programs:
 
 ```go
-import "github.com/tensorhero-dev/tensorhero-tester-utils/runner"
+import "github.com/tensorhero/tester-utils/runner"
 
 // Blocking mode — send stdin, check stdout + exit code
 err := runner.Run(workDir, "hello").
@@ -133,5 +133,5 @@ err := runner.CompileC(workDir, "hello.c", "hello", "-I..")
 
 ## Documentation
 
-- [GoDoc](https://pkg.go.dev/github.com/tensorhero-dev/tensorhero-tester-utils)
+- [GoDoc](https://pkg.go.dev/github.com/tensorhero/tester-utils)
 - [4-Phase Pipeline Design](docs/4-phase-pipeline/design.md)

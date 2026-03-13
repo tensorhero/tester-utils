@@ -3,7 +3,7 @@ package test_runner
 import (
 	"fmt"
 
-	"github.com/tensorhero-dev/tensorhero-tester-utils/test_case_harness"
+	"github.com/tensorhero/tester-utils/test_case_harness"
 )
 
 // safeRunBeforeFunc executes a BeforeFunc with panic recovery.

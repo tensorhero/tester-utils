@@ -3,7 +3,7 @@ package tester_definition
 import (
 	"time"
 
-	"github.com/tensorhero-dev/tensorhero-tester-utils/test_case_harness"
+	"github.com/tensorhero/tester-utils/test_case_harness"
 )
 
 // CompileStep declares a compilation step to be executed by the framework

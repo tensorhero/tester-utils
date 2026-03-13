@@ -1,4 +1,4 @@
-module github.com/tensorhero-dev/tensorhero-tester-utils
+module github.com/tensorhero/tester-utils
 
 go 1.24
 

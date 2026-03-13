@@ -5,8 +5,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/tensorhero-dev/tensorhero-tester-utils/test_case_harness"
-	"github.com/tensorhero-dev/tensorhero-tester-utils/tester_definition"
+	"github.com/tensorhero/tester-utils/test_case_harness"
+	"github.com/tensorhero/tester-utils/tester_definition"
 	"github.com/stretchr/testify/assert"
 )
 
