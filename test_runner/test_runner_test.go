@@ -508,3 +508,161 @@ func TestCheckRequiredFiles_Empty(t *testing.T) {
 	err := r.checkRequiredFiles(h, []string{})
 	assert.NoError(t, err, "empty list should pass")
 }
+
+// ============== Phase 2: auto-detect language ==============
+
+func TestAutoDetect_Java_EndToEnd(t *testing.T) {
+	if !javacAvailable() {
+		t.Skip("javac not available")
+	}
+	dir := t.TempDir()
+	os.MkdirAll(filepath.Join(dir, "tests"), 0755)
+	os.WriteFile(filepath.Join(dir, "NDArray.java"), []byte(`
+public class NDArray {
+    public static void main(String[] args) {}
+}
+`), 0644)
+	os.WriteFile(filepath.Join(dir, "tests/TestE01.java"), []byte(`
+public class TestE01 {
+    public static void main(String[] args) {
+        System.out.println("TEST:shape RESULT:pass");
+    }
+}
+`), 0644)
+
+	var detectedLang *test_case_harness.DetectedLanguage
+	tc := tester_definition.TestCase{
+		Slug: "test",
+		CompileStep: &tester_definition.CompileStep{
+			Language: "auto",
+			AutoDetect: []tester_definition.LanguageRule{
+				{
+					DetectFile: "NDArray.java",
+					Language:   "java",
+					Source:     "NDArray.java",
+					Flags:      []string{"tests/TestE01.java"},
+					RunCmd:     "java",
+					RunArgs:    []string{"-cp", ".", "TestE01"},
+				},
+				{
+					DetectFile: "num4py/ndarray.py",
+					Language:   "python",
+					Source:     "num4py/ndarray.py",
+					RunCmd:     "python3",
+					RunArgs:    []string{"tests/test_e01.py"},
+				},
+			},
+		},
+		TestFunc: func(h *test_case_harness.TestCaseHarness) error {
+			detectedLang = h.DetectedLang
+			return nil
+		},
+	}
+
+	r := newRunner([]TestRunnerStep{makeStep(tc)}, dir)
+	result := r.Run(false, dummyExecutable(dir))
+
+	assert.True(t, result, "auto-detect Java should compile and pass")
+	require.NotNil(t, detectedLang)
+	assert.Equal(t, "java", detectedLang.Language)
+	assert.Equal(t, "java", detectedLang.RunCmd)
+	assert.Equal(t, []string{"-cp", ".", "TestE01"}, detectedLang.RunArgs)
+	// Verify .class files were compiled (javac -d . puts classes at package root, not source dir)
+	assert.FileExists(t, filepath.Join(dir, "NDArray.class"))
+	assert.FileExists(t, filepath.Join(dir, "TestE01.class"))
+}
+
+func TestAutoDetect_Python_EndToEnd(t *testing.T) {
+	if !python3Available() {
+		t.Skip("python3 not available")
+	}
+	dir := t.TempDir()
+	os.MkdirAll(filepath.Join(dir, "num4py"), 0755)
+	os.WriteFile(filepath.Join(dir, "num4py/ndarray.py"), []byte("class NDArray:\n    pass\n"), 0644)
+
+	var detectedLang *test_case_harness.DetectedLanguage
+	tc := tester_definition.TestCase{
+		Slug: "test",
+		CompileStep: &tester_definition.CompileStep{
+			Language: "auto",
+			AutoDetect: []tester_definition.LanguageRule{
+				{DetectFile: "NDArray.java", Language: "java", RunCmd: "java"},
+				{DetectFile: "num4py/ndarray.py", Language: "python", Source: "num4py/ndarray.py", RunCmd: "python3", RunArgs: []string{"tests/test_e01.py"}},
+			},
+		},
+		TestFunc: func(h *test_case_harness.TestCaseHarness) error {
+			detectedLang = h.DetectedLang
+			return nil
+		},
+	}
+
+	r := newRunner([]TestRunnerStep{makeStep(tc)}, dir)
+	result := r.Run(false, dummyExecutable(dir))
+
+	assert.True(t, result, "auto-detect Python should syntax-check and pass")
+	require.NotNil(t, detectedLang)
+	assert.Equal(t, "python", detectedLang.Language)
+	assert.Equal(t, "python3", detectedLang.RunCmd)
+}
+
+func TestAutoDetect_NoMatch_SkipsTestFunc(t *testing.T) {
+	dir := t.TempDir()
+
+	called := false
+	tc := tester_definition.TestCase{
+		Slug: "test",
+		CompileStep: &tester_definition.CompileStep{
+			Language: "auto",
+			AutoDetect: []tester_definition.LanguageRule{
+				{DetectFile: "NDArray.java", Language: "java"},
+				{DetectFile: "num4py/ndarray.py", Language: "python"},
+			},
+		},
+		TestFunc: func(h *test_case_harness.TestCaseHarness) error {
+			called = true
+			return nil
+		},
+	}
+
+	r := newRunner([]TestRunnerStep{makeStep(tc)}, dir)
+	result := r.Run(false, dummyExecutable(dir))
+
+	assert.False(t, result, "should fail when no language file is found")
+	assert.False(t, called, "TestFunc should NOT be called")
+}
+
+func TestAutoDetect_EmptyRules_Fails(t *testing.T) {
+	dir := t.TempDir()
+
+	tc := tester_definition.TestCase{
+		Slug: "test",
+		CompileStep: &tester_definition.CompileStep{
+			Language:   "auto",
+			AutoDetect: nil,
+		},
+		TestFunc: passFunc,
+	}
+
+	r := newRunner([]TestRunnerStep{makeStep(tc)}, dir)
+	result := r.Run(false, dummyExecutable(dir))
+	assert.False(t, result, "auto with empty AutoDetect should fail")
+}
+
+func TestNonAutoMode_DetectedLangIsNil(t *testing.T) {
+	dir := t.TempDir()
+
+	var detectedLang *test_case_harness.DetectedLanguage
+	tc := tester_definition.TestCase{
+		Slug: "test",
+		TestFunc: func(h *test_case_harness.TestCaseHarness) error {
+			detectedLang = h.DetectedLang
+			return nil
+		},
+	}
+
+	r := newRunner([]TestRunnerStep{makeStep(tc)}, dir)
+	result := r.Run(false, dummyExecutable(dir))
+
+	assert.True(t, result)
+	assert.Nil(t, detectedLang, "DetectedLang should be nil when not using auto mode")
+}

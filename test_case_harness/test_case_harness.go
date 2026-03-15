@@ -8,6 +8,14 @@ import (
 	"github.com/tensorhero/tester-utils/logger"
 )
 
+// DetectedLanguage holds the runtime info for a language detected by CompileStep Language="auto".
+// Populated by the framework in Phase 2; consumed by TestFunc via harness.DetectedLang.
+type DetectedLanguage struct {
+	Language string   // detected language ("java", "python", etc.)
+	RunCmd   string   // run command ("java", "python3", etc.)
+	RunArgs  []string // run arguments (e.g. ["-cp", ".", "TestE01"])
+}
+
 // TestCaseHarness is passed to your TestCase's TestFunc.
 //
 // For TensorHero courses that don't use your_program.sh, use SubmissionDir directly:
@@ -39,6 +47,10 @@ type TestCaseHarness struct {
 
 	// Executable is the program to be tested (may point to SubmissionDir if no ExecutableFileName).
 	Executable *executable.Executable
+
+	// DetectedLang is the auto-detected language info from CompileStep Language="auto".
+	// nil when Language is not "auto". TestFunc reads RunCmd/RunArgs to run the test driver.
+	DetectedLang *DetectedLanguage
 
 	// teardownFuncs are run once the error has been reported to the user
 	teardownFuncs []func()

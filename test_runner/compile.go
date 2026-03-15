@@ -37,6 +37,49 @@ func (r TestRunner) runCompileStep(harness *test_case_harness.TestCaseHarness, c
 		logger.Successf("make %s succeeds", cs.Output)
 		return nil
 
+	case "java":
+		logger.Infof("Compiling %s...", cs.Source)
+		if err := compileJava(workDir, cs); err != nil {
+			return fmt.Errorf("%s does not compile: %v", cs.Source, err)
+		}
+		logger.Successf("%s compiles", cs.Source)
+		return nil
+
+	case "python":
+		logger.Infof("Checking %s syntax...", cs.Source)
+		if err := checkPythonSyntax(workDir, cs); err != nil {
+			return fmt.Errorf("%s has syntax errors: %v", cs.Source, err)
+		}
+		logger.Successf("%s syntax OK", cs.Source)
+		return nil
+
+	case "auto":
+		if len(cs.AutoDetect) == 0 {
+			return fmt.Errorf("CompileStep Language=\"auto\" but AutoDetect is empty")
+		}
+		rule, err := detectLanguage(workDir, cs.AutoDetect)
+		if err != nil {
+			return err
+		}
+		logger.Infof("Detected language: %s (found %s)", rule.Language, rule.DetectFile)
+		harness.DetectedLang = &test_case_harness.DetectedLanguage{
+			Language: rule.Language,
+			RunCmd:   rule.RunCmd,
+			RunArgs:  rule.RunArgs,
+		}
+		// Resolve source: default to DetectFile if Source is empty
+		source := rule.Source
+		if source == "" {
+			source = rule.DetectFile
+		}
+		resolved := &tester_definition.CompileStep{
+			Language: rule.Language,
+			Source:   source,
+			Flags:    rule.Flags,
+			Output:   cs.Output,
+		}
+		return r.runCompileStep(harness, resolved)
+
 	default:
 		return fmt.Errorf("unsupported compile language: %s", cs.Language)
 	}
@@ -72,6 +115,35 @@ func compileC(workDir string, cs *tester_definition.CompileStep) error {
 	}
 
 	cmd := exec.Command("clang", args...)
+	cmd.Dir = workDir
+	out, err := cmd.CombinedOutput()
+	if err != nil {
+		return fmt.Errorf("%s\nOutput:\n%s", err, string(out))
+	}
+	return nil
+}
+
+// compileJava compiles Java source files using javac.
+// Source is the main .java file; Flags can carry additional .java files (e.g. test drivers).
+// .class files are written to workDir via -d flag.
+func compileJava(workDir string, cs *tester_definition.CompileStep) error {
+	args := []string{"-d", "."}
+	args = append(args, cs.Flags...)
+	args = append(args, cs.Source)
+
+	cmd := exec.Command("javac", args...)
+	cmd.Dir = workDir
+	out, err := cmd.CombinedOutput()
+	if err != nil {
+		return fmt.Errorf("%s\nOutput:\n%s", err, string(out))
+	}
+	return nil
+}
+
+// checkPythonSyntax runs python3 -m py_compile for a syntax-only check.
+// No executable is produced; this is an optional early-fail step for interpreted languages.
+func checkPythonSyntax(workDir string, cs *tester_definition.CompileStep) error {
+	cmd := exec.Command("python3", "-m", "py_compile", cs.Source)
 	cmd.Dir = workDir
 	out, err := cmd.CombinedOutput()
 	if err != nil {

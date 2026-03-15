@@ -6,20 +6,43 @@ import (
 	"github.com/tensorhero/tester-utils/test_case_harness"
 )
 
-// CompileStep declares a compilation step to be executed by the framework
-// before TestFunc. Supports C (clang) and Make.
-type CompileStep struct {
-	// Language is the compile language: "c" or "make".
-	//   "c"    → invokes clang with default flags (-lm -Wall -Werror) + Flags
-	//   "make" → invokes make <Target>
+// LanguageRule defines a language detection rule for CompileStep.Language="auto" mode.
+// The framework checks AutoDetect rules in order; the first matching DetectFile wins.
+type LanguageRule struct {
+	// DetectFile is the file whose existence signals this language (relative to submission dir).
+	DetectFile string
+
+	// Language is the compile language to use when matched ("java", "python", "c", "make").
 	Language string
 
-	// Source is the source file to compile (required when Language="c").
+	// Source is the main source file for compilation. Defaults to DetectFile if empty.
 	Source string
 
-	// Output is the compilation target.
-	//   Language="c":    output binary name (e.g. "hello"), written to {SubmissionDir}/{Output}.
-	//   Language="make": make target name (e.g. "speller"), equivalent to `make {Output}`.
+	// Flags are extra compiler flags (e.g. additional .java files for javac).
+	Flags []string
+
+	// RunCmd is the run command (e.g. "java", "python3") exposed via harness.DetectedLang.
+	RunCmd string
+
+	// RunArgs are the run arguments (e.g. ["-cp", ".", "TestE01"]) exposed via harness.DetectedLang.
+	RunArgs []string
+}
+
+// CompileStep declares a compilation step to be executed by the framework
+// before TestFunc. Supports C (clang), Make, Java (javac), Python (py_compile), and auto-detection.
+type CompileStep struct {
+	// Language is the compile language: "c", "make", "java", "python", or "auto".
+	//   "c"      → invokes clang with default flags (-lm -Wall -Werror) + Flags
+	//   "make"   → invokes make <Target>
+	//   "java"   → invokes javac
+	//   "python" → invokes python3 -m py_compile (syntax check)
+	//   "auto"   → detects language via AutoDetect rules, then dispatches
+	Language string
+
+	// Source is the source file to compile (required when Language="c" or "java").
+	Source string
+
+	// Output is the compilation target (used by "c" and "make" only; ignored for java/python/auto).
 	Output string
 
 	// Flags are extra compiler flags appended (not replacing) after the default flags.
@@ -27,6 +50,10 @@ type CompileStep struct {
 
 	// IncludeParentDir adds -I.. to include the parent directory (e.g. for tensorhero.h).
 	IncludeParentDir bool
+
+	// AutoDetect is the ordered list of language detection rules (used only when Language="auto").
+	// The first rule whose DetectFile exists in the submission directory wins.
+	AutoDetect []LanguageRule
 }
 
 // TestCase represents a test case that'll be run against the user's code.
