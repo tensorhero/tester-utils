@@ -6,8 +6,8 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/tensorhero/tester-utils/test_case_harness"
-	"github.com/tensorhero/tester-utils/tester_definition"
+	"github.com/tensorhero-cn/tester-utils/test_case_harness"
+	"github.com/tensorhero-cn/tester-utils/tester_definition"
 	"github.com/stretchr/testify/assert"
 )
 

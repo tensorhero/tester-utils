@@ -4,8 +4,8 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/tensorhero/tester-utils/executable"
-	"github.com/tensorhero/tester-utils/logger"
+	"github.com/tensorhero-cn/tester-utils/executable"
+	"github.com/tensorhero-cn/tester-utils/logger"
 )
 
 // DetectedLanguage holds the runtime info for a language detected by CompileStep Language="auto".

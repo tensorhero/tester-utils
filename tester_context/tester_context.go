@@ -8,8 +8,8 @@ import (
 	"path"
 	"strings"
 
-	"github.com/tensorhero/tester-utils/internal"
-	"github.com/tensorhero/tester-utils/tester_definition"
+	"github.com/tensorhero-cn/tester-utils/internal"
+	"github.com/tensorhero-cn/tester-utils/tester_definition"
 	"gopkg.in/yaml.v2"
 )
 

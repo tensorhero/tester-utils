@@ -8,9 +8,9 @@ import (
 	"strings"
 	"testing"
 
-	tester_utils "github.com/tensorhero/tester-utils"
-	"github.com/tensorhero/tester-utils/stdio_mocker"
-	"github.com/tensorhero/tester-utils/tester_definition"
+	tester_utils "github.com/tensorhero-cn/tester-utils"
+	"github.com/tensorhero-cn/tester-utils/stdio_mocker"
+	"github.com/tensorhero-cn/tester-utils/tester_definition"
 	"github.com/stretchr/testify/assert"
 )
 

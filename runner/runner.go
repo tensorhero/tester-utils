@@ -11,8 +11,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/tensorhero/tester-utils/executable"
-	"github.com/tensorhero/tester-utils/logger"
+	"github.com/tensorhero-cn/tester-utils/executable"
+	"github.com/tensorhero-cn/tester-utils/logger"
 )
 
 // Runner 提供类似 check50 的链式 API 来运行和测试程序

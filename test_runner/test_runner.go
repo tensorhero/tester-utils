@@ -4,10 +4,10 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/tensorhero/tester-utils/executable"
-	"github.com/tensorhero/tester-utils/logger"
-	"github.com/tensorhero/tester-utils/test_case_harness"
-	"github.com/tensorhero/tester-utils/tester_definition"
+	"github.com/tensorhero-cn/tester-utils/executable"
+	"github.com/tensorhero-cn/tester-utils/logger"
+	"github.com/tensorhero-cn/tester-utils/test_case_harness"
+	"github.com/tensorhero-cn/tester-utils/tester_definition"
 )
 
 type TestRunnerStep struct {

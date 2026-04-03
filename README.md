@@ -1,26 +1,26 @@
 # TensorHero Tester Utils
 
-A shared framework module for TensorHero course testing tools.
+TensorHero 课程测试工具的共享框架模块。
 
-**Based on:** [codecrafters-io/tester-utils](https://github.com/codecrafters-io/tester-utils)
+**基于：** [codecrafters-io/tester-utils](https://github.com/codecrafters-io/tester-utils)
 
-## Features
+## 功能特性
 
-- **4-phase test pipeline** — declarative file checks, compilation, and pre-test hooks before `TestFunc`
-- **Fluent Runner API** — check50-style program testing with blocking, interactive, and PTY modes
-- **Flexible run modes** — platform-dispatched (JSON), single stage, or run-all (default)
-- **CLI support** — `./tester hello`, `./tester -s hello -d ~/work`, `--help`
-- **Sensible defaults** — `tensorhero.yml` optional, working directory defaults to `.`
+- **四阶段测试流水线** — 在 `TestFunc` 之前依次执行文件检查、编译、预置钩子
+- **流式 Runner API** — check50 风格的程序测试，支持阻塞、交互、PTY 模式
+- **灵活运行模式** — 平台派发（JSON）、单阶段、全量运行（默认）
+- **CLI 支持** — `./tester hello`、`./tester -s hello -d ~/work`、`--help`
+- **合理默认值** — `tensorhero.yml` 可选，工作目录默认为 `.`
 
-## Quick Start
+## 快速开始
 
 ```go
 package main
 
 import (
     "os"
-    tester_utils "github.com/tensorhero/tester-utils"
-    "github.com/tensorhero/tester-utils/tester_definition"
+    tester_utils "github.com/tensorhero-cn/tester-utils"
+    "github.com/tensorhero-cn/tester-utils/tester_definition"
 )
 
 func main() {
@@ -40,98 +40,98 @@ func main() {
 }
 ```
 
-## 4-Phase Test Pipeline
+## 四阶段测试流水线
 
-Each `TestCase` executes through a 4-phase pipeline. Any phase failure skips remaining phases, runs `TeardownFuncs`, and reports the error.
+每个 `TestCase` 依次经过四个阶段。任意阶段失败后，跳过后续阶段，执行 `TeardownFuncs` 并上报错误。
 
 ```
-Phase 1: RequiredFiles  →  Phase 2: CompileStep  →  Phase 3: BeforeFunc  →  Phase 4: TestFunc
-(file existence check)     (compile with 30s timeout) (custom hook + panic recovery) (actual test)
+阶段 1: RequiredFiles  →  阶段 2: CompileStep  →  阶段 3: BeforeFunc  →  阶段 4: TestFunc
+（文件存在性检查）          （编译，30s 超时）        （自定义钩子 + panic 恢复）   （实际测试）
 ```
 
-All phases are opt-in via zero-value semantics (`nil`/empty = skip).
+所有阶段均通过零值语义按需启用（`nil`/空 = 跳过）。
 
 ```go
 tester_definition.TestCase{
     Slug:          "hello",
-    RequiredFiles: []string{"hello.c"},                        // Phase 1
-    CompileStep: &tester_definition.CompileStep{               // Phase 2
+    RequiredFiles: []string{"hello.c"},                        // 阶段 1
+    CompileStep: &tester_definition.CompileStep{               // 阶段 2
         Language: "c", Source: "hello.c", Output: "hello",
-        IncludeParentDir: true,  // adds -I.. for shared headers
+        IncludeParentDir: true,  // 添加 -I.. 以引用上层公共头文件
     },
-    BeforeFunc: func(h *test_case_harness.TestCaseHarness) error {  // Phase 3
-        // custom setup (e.g. start a server, assemble test files)
+    BeforeFunc: func(h *test_case_harness.TestCaseHarness) error {  // 阶段 3
+        // 自定义初始化（如启动服务器、准备测试文件）
         return nil
     },
-    TestFunc: testHello,                                       // Phase 4
+    TestFunc: testHello,                                       // 阶段 4
 }
 ```
 
 ### CompileStep
 
-| Language | Behavior                                                 | Example            |
-| -------- | -------------------------------------------------------- | ------------------ |
-| `"c"`    | `clang -o {Output} {Source} -lm -Wall -Werror` + `Flags` | C stages           |
-| `"make"` | `make {Output}`                                          | speller (Makefile) |
+| 语言     | 行为                                                     | 示例                |
+| -------- | -------------------------------------------------------- | ------------------- |
+| `"c"`    | `clang -o {Output} {Source} -lm -Wall -Werror` + `Flags` | C 阶段              |
+| `"make"` | `make {Output}`                                          | speller（Makefile） |
 
-Default C flags (`-lm -Wall -Werror`) are always applied; `Flags` appends extra flags.
+默认 C 编译参数（`-lm -Wall -Werror`）始终生效；`Flags` 用于追加额外参数。
 
-## Runner Package
+## Runner 包
 
-Fluent API for testing programs:
+用于测试程序的流式 API：
 
 ```go
-import "github.com/tensorhero/tester-utils/runner"
+import "github.com/tensorhero-cn/tester-utils/runner"
 
-// Blocking mode — send stdin, check stdout + exit code
+// 阻塞模式 — 发送 stdin，检查 stdout + 退出码
 err := runner.Run(workDir, "hello").
     Stdin("Alice").
     Stdout("hello, Alice").
     Exit(0).
     Error()
 
-// Interactive mode — test input rejection
+// 交互模式 — 测试输入拒绝逻辑
 err := runner.Run(workDir, "mario").
     Start().
-    SendLine("-1").Reject().        // expect program to re-prompt
+    SendLine("-1").Reject().        // 期望程序重新提示输入
     SendLine("4").Stdout("#####").
     Exit(0).
     Error()
 
-// PTY mode
+// PTY 模式
 err := runner.Run(workDir, "mario").
     WithPty().
     Stdin("5").Stdout("#####").
     Exit(0).
     Error()
 
-// Compile C source
+// 编译 C 源文件
 err := runner.CompileC(workDir, "hello.c", "hello", "-I..")
 ```
 
-## CLI Usage
+## CLI 用法
 
 ```bash
-./tester              # run all tests
-./tester hello        # run specific stage
-./tester -s hello     # same, with flag
-./tester -d ./work    # specify working directory
-./tester --help       # show help
+./tester              # 运行所有测试
+./tester hello        # 运行指定阶段
+./tester -s hello     # 同上，使用参数形式
+./tester -d ./work    # 指定工作目录
+./tester --help       # 显示帮助
 ```
 
-## Environment Variables
+## 环境变量
 
-| Variable                     | Description                                          |
-| ---------------------------- | ---------------------------------------------------- |
-| `TENSORHERO_REPOSITORY_DIR`  | Working directory (default: `.`)                     |
-| `TENSORHERO_STAGE`           | Run a single stage by slug (debug use)               |
-| `TENSORHERO_TEST_CASES_JSON` | Full JSON test case list (used by Worker dispatch)   |
-| `TENSORHERO_RANDOM_SEED`     | Fixed seed for deterministic random numbers          |
-| `TENSORHERO_SKIP_ANTI_CHEAT` | Set `true` to skip anti-cheat test cases             |
-| `TENSORHERO_STREAM_LOGS`     | Set `1` to disable colors and redirect stdout→stderr |
-| `TENSORHERO_RECORD_FIXTURES` | Set `true` to record/update test fixtures            |
+| 变量                         | 说明                                         |
+| ---------------------------- | -------------------------------------------- |
+| `TENSORHERO_REPOSITORY_DIR`  | 工作目录（默认：`.`）                        |
+| `TENSORHERO_STAGE`           | 按 slug 运行单个阶段（调试用）               |
+| `TENSORHERO_TEST_CASES_JSON` | 完整 JSON 测试用例列表（Worker 派发时使用）  |
+| `TENSORHERO_RANDOM_SEED`     | 固定随机种子，用于确定性随机数               |
+| `TENSORHERO_SKIP_ANTI_CHEAT` | 设为 `true` 跳过反作弊测试用例               |
+| `TENSORHERO_STREAM_LOGS`     | 设为 `1` 禁用颜色并将 stdout 重定向至 stderr |
+| `TENSORHERO_RECORD_FIXTURES` | 设为 `true` 录制/更新测试 fixture            |
 
-## Documentation
+## 文档
 
-- [GoDoc](https://pkg.go.dev/github.com/tensorhero/tester-utils)
-- [4-Phase Pipeline Design](docs/4-phase-pipeline/design.md)
+- [GoDoc](https://pkg.go.dev/github.com/tensorhero-cn/tester-utils)
+- [四阶段流水线设计](docs/4-phase-pipeline/design.md)

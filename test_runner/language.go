@@ -6,7 +6,7 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/tensorhero/tester-utils/tester_definition"
+	"github.com/tensorhero-cn/tester-utils/tester_definition"
 )
 
 // detectLanguage checks rules in order, returning the first rule whose DetectFile exists.

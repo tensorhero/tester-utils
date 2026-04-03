@@ -6,13 +6,13 @@ import (
 	"os"
 	"strings"
 
-	"github.com/tensorhero/tester-utils/executable"
-	"github.com/tensorhero/tester-utils/internal"
-	"github.com/tensorhero/tester-utils/logger"
-	"github.com/tensorhero/tester-utils/random"
-	"github.com/tensorhero/tester-utils/test_runner"
-	"github.com/tensorhero/tester-utils/tester_context"
-	"github.com/tensorhero/tester-utils/tester_definition"
+	"github.com/tensorhero-cn/tester-utils/executable"
+	"github.com/tensorhero-cn/tester-utils/internal"
+	"github.com/tensorhero-cn/tester-utils/logger"
+	"github.com/tensorhero-cn/tester-utils/random"
+	"github.com/tensorhero-cn/tester-utils/test_runner"
+	"github.com/tensorhero-cn/tester-utils/tester_context"
+	"github.com/tensorhero-cn/tester-utils/tester_definition"
 	"github.com/fatih/color"
 )
 

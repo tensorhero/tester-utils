@@ -8,10 +8,10 @@ description_md: |-
 
 supported_languages: ["python", "go", "php"]
 starter_repos:
-  python: https://github.com/tensorhero-dev/redis-starter-py
-  swift: https://github.com/tensorhero-dev/redis-starter-swift
-  go: https://github.com/tensorhero-dev/redis-starter-golang
-  php: https://github.com/tensorhero-dev/redis-starter-php
+  python: https://github.com/tensorhero-cn/redis-starter-py
+  swift: https://github.com/tensorhero-cn/redis-starter-swift
+  go: https://github.com/tensorhero-cn/redis-starter-golang
+  php: https://github.com/tensorhero-cn/redis-starter-php
 
 marketing_intro_md: |-
   This is the first TensorHero challenge. We're currently running [early

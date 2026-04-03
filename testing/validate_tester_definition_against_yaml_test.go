@@ -3,7 +3,7 @@ package testing
 import (
 	"testing"
 
-	"github.com/tensorhero/tester-utils/tester_definition"
+	"github.com/tensorhero-cn/tester-utils/tester_definition"
 	"github.com/stretchr/testify/assert"
 
 	testingInterface "github.com/mitchellh/go-testing-interface"
