@@ -4,8 +4,8 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/tensorhero-cn/tester-utils/executable"
-	"github.com/tensorhero-cn/tester-utils/logger"
+	"github.com/bootcraft-cn/tester-utils/executable"
+	"github.com/bootcraft-cn/tester-utils/logger"
 )
 
 // DetectedLanguage holds the runtime info for a language detected by CompileStep Language="auto".
@@ -18,7 +18,7 @@ type DetectedLanguage struct {
 
 // TestCaseHarness is passed to your TestCase's TestFunc.
 //
-// For TensorHero courses that don't use your_program.sh, use SubmissionDir directly:
+// For BootCraft courses that don't use your_program.sh, use SubmissionDir directly:
 //
 //	if !harness.FileExists("hello.c") {
 //	    return fmt.Errorf("hello.c does not exist")

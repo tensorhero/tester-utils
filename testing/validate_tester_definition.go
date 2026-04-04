@@ -3,7 +3,7 @@ package testing
 import (
 	"os"
 
-	"github.com/tensorhero-cn/tester-utils/tester_definition"
+	"github.com/bootcraft-cn/tester-utils/tester_definition"
 	"github.com/mitchellh/go-testing-interface"
 	"github.com/stretchr/testify/assert"
 	"gopkg.in/yaml.v2"

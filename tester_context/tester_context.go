@@ -8,8 +8,8 @@ import (
 	"path"
 	"strings"
 
-	"github.com/tensorhero-cn/tester-utils/internal"
-	"github.com/tensorhero-cn/tester-utils/tester_definition"
+	"github.com/bootcraft-cn/tester-utils/internal"
+	"github.com/bootcraft-cn/tester-utils/tester_definition"
 	"gopkg.in/yaml.v2"
 )
 
@@ -25,7 +25,7 @@ type TesterContextTestCase struct {
 	Title string `json:"title"`
 }
 
-// TesterContext holds all flags passed in via environment variables, or from the tensorhero.yml file
+// TesterContext holds all flags passed in via environment variables, or from the bootcraft.yml file
 type TesterContext struct {
 	// SubmissionDir is the directory containing the student's submission
 	SubmissionDir string
@@ -48,13 +48,13 @@ func (c TesterContext) Print() {
 
 // GetTesterContext parses flags and returns a Context object
 // 支持三种模式：
-// 1. TENSORHERO_TEST_CASES_JSON - 完整 JSON 格式（兼容 worker 调度）
-// 2. TENSORHERO_STAGE - 指定单个 stage slug（调试用）
+// 1. BOOTCRAFT_TEST_CASES_JSON - 完整 JSON 格式（兼容 worker 调度）
+// 2. BOOTCRAFT_STAGE - 指定单个 stage slug（调试用）
 // 3. 无环境变量 - 运行所有测试（默认行为）
 //
-// TENSORHERO_REPOSITORY_DIR 默认为当前目录 "."
+// BOOTCRAFT_REPOSITORY_DIR 默认为当前目录 "."
 func GetTesterContext(env map[string]string, definition tester_definition.TesterDefinition) (TesterContext, error) {
-	submissionDir, ok := env["TENSORHERO_REPOSITORY_DIR"]
+	submissionDir, ok := env["BOOTCRAFT_REPOSITORY_DIR"]
 	if !ok {
 		// 默认为当前目录
 		submissionDir = "."
@@ -64,13 +64,13 @@ func GetTesterContext(env map[string]string, definition tester_definition.Tester
 	var err error
 
 	// 优先级：JSON > STAGE > 全部运行
-	if testCasesJson, ok := env["TENSORHERO_TEST_CASES_JSON"]; ok {
+	if testCasesJson, ok := env["BOOTCRAFT_TEST_CASES_JSON"]; ok {
 		// 模式1：完整 JSON 格式（兼容 worker）
 		testCases, err = parseTestCasesFromJSON(testCasesJson)
 		if err != nil {
 			return TesterContext{}, err
 		}
-	} else if stageSlug, ok := env["TENSORHERO_STAGE"]; ok {
+	} else if stageSlug, ok := env["BOOTCRAFT_STAGE"]; ok {
 		// 模式2：单个 stage（调试用）
 		testCases, err = buildTestCasesForStage(stageSlug, definition)
 		if err != nil {
@@ -86,7 +86,7 @@ func GetTesterContext(env map[string]string, definition tester_definition.Tester
 	}
 
 	var shouldSkipAntiCheatTestCases = false
-	skipAntiCheatValue, ok := env["TENSORHERO_SKIP_ANTI_CHEAT"]
+	skipAntiCheatValue, ok := env["BOOTCRAFT_SKIP_ANTI_CHEAT"]
 	if ok && skipAntiCheatValue == "true" {
 		shouldSkipAntiCheatTestCases = true
 	}
@@ -106,7 +106,7 @@ func GetTesterContext(env map[string]string, definition tester_definition.Tester
 		}
 	}
 
-	configPath := path.Join(submissionDir, "tensorhero.yml")
+	configPath := path.Join(submissionDir, "bootcraft.yml")
 
 	yamlConfig, err := readFromYAML(configPath)
 	if err != nil {
@@ -126,18 +126,18 @@ func GetTesterContext(env map[string]string, definition tester_definition.Tester
 func parseTestCasesFromJSON(jsonStr string) ([]TesterContextTestCase, error) {
 	testCases := []TesterContextTestCase{}
 	if err := json.Unmarshal([]byte(jsonStr), &testCases); err != nil {
-		return nil, fmt.Errorf("failed to parse TENSORHERO_TEST_CASES_JSON: %s", err)
+		return nil, fmt.Errorf("failed to parse BOOTCRAFT_TEST_CASES_JSON: %s", err)
 	}
 
 	for _, tc := range testCases {
 		if tc.Slug == "" {
-			return nil, fmt.Errorf("TENSORHERO_TEST_CASES_JSON contains a test case with an empty slug")
+			return nil, fmt.Errorf("BOOTCRAFT_TEST_CASES_JSON contains a test case with an empty slug")
 		}
 		if tc.TesterLogPrefix == "" {
-			return nil, fmt.Errorf("TENSORHERO_TEST_CASES_JSON contains a test case with an empty tester_log_prefix")
+			return nil, fmt.Errorf("BOOTCRAFT_TEST_CASES_JSON contains a test case with an empty tester_log_prefix")
 		}
 		if tc.Title == "" {
-			return nil, fmt.Errorf("TENSORHERO_TEST_CASES_JSON contains a test case with an empty title")
+			return nil, fmt.Errorf("BOOTCRAFT_TEST_CASES_JSON contains a test case with an empty title")
 		}
 	}
 
@@ -191,18 +191,18 @@ func readFromYAML(configPath string) (yamlConfig, error) {
 
 	fileContents, err := os.ReadFile(configPath)
 	if err != nil {
-		// tensorhero.yml is optional - return default config if not found
+		// bootcraft.yml is optional - return default config if not found
 		if os.IsNotExist(err) {
 			return yamlConfig{Debug: false}, nil
 		}
 		return yamlConfig{}, &internal.UserError{
-			Message: fmt.Sprintf("Can't read tensorhero.yml file: %v", err),
+			Message: fmt.Sprintf("Can't read bootcraft.yml file: %v", err),
 		}
 	}
 
 	if err := yaml.Unmarshal(fileContents, c); err != nil {
 		return yamlConfig{}, &internal.UserError{
-			Message: fmt.Sprintf("error parsing tensorhero.yml: %s", err),
+			Message: fmt.Sprintf("error parsing bootcraft.yml: %s", err),
 		}
 	}
 

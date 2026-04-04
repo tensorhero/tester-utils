@@ -130,5 +130,5 @@ tester 执行:
 
 - **不支持 Go / TypeScript 编译**：tinynum MVP 仅 Java + Python，其他语言留给未来按需新增
 - **不修改 Runner 断言 API**：不新增 `StdoutFloat` 等浮点断言，由 tinynum-tester 的 `internal/helpers/` 自行处理
-- **不修改 tensorhero.yml 格式**：语言检测基于文件存在性，不依赖配置文件声明
+- **不修改 bootcraft.yml 格式**：语言检测基于文件存在性，不依赖配置文件声明
 - **不支持同一提交多语言混合**：一个提交目录只能是一种语言

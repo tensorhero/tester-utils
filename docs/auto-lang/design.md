@@ -244,7 +244,7 @@ import (
     "path/filepath"
     "strings"
 
-    "github.com/tensorhero-cn/tester-utils/tester_definition"
+    "github.com/bootcraft-cn/tester-utils/tester_definition"
 )
 
 // detectLanguage 按规则列表顺序检测文件存在性，返回首个匹配的规则。

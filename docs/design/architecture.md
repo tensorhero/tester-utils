@@ -1,4 +1,4 @@
-# TensorHero Tester Utils — Architecture Design
+# BootCraft Tester Utils — Architecture Design
 
 ## 1. Overview
 
@@ -26,7 +26,7 @@ Course Tester Binary
 | `runner`                | Fluent API for output assertions: `Run().Stdin().Stdout().Exit()`.                            |
 | `logger`                | Color-coded leveled logging with global mutex serialization and quiet mode.                   |
 | `linewriter`            | Channel-based line buffer; flushes on newline or 500 ms timeout.                              |
-| `random`                | Deterministic RNG seeded via `TENSORHERO_RANDOM_SEED`.                                        |
+| `random`                | Deterministic RNG seeded via `BOOTCRAFT_RANDOM_SEED`.                                        |
 | `bytes_diff_visualizer` | Hex + ASCII diff rendering with ANSI color at first differing byte.                           |
 | `stdio_mocker`          | Test utility: replaces `os.Stdout/Stdin/Stderr` with temp files.                              |
 | `testing`               | `ValidateTesterDefinitionAgainstYAML` — validates tester definitions against course YAML.     |
@@ -55,8 +55,8 @@ main() → tester.Run(definition)
 
 | Mode      | Trigger                          | Behavior                                                         |
 | --------- | -------------------------------- | ---------------------------------------------------------------- |
-| **JSON**  | `TENSORHERO_TEST_CASES_JSON` set | Run specific test cases listed in JSON.                          |
-| **STAGE** | `TENSORHERO_STAGE` set           | Run all test cases up to and including the specified stage slug. |
+| **JSON**  | `BOOTCRAFT_TEST_CASES_JSON` set | Run specific test cases listed in JSON.                          |
+| **STAGE** | `BOOTCRAFT_STAGE` set           | Run all test cases up to and including the specified stage slug. |
 | **ALL**   | Neither set                      | Run every test case sequentially.                                |
 
 ## 4. Four-Phase Test Pipeline
@@ -163,16 +163,16 @@ Logger
 
 | Variable                     | Required | Description                                |
 | ---------------------------- | -------- | ------------------------------------------ |
-| `TENSORHERO_REPOSITORY_DIR`  | Yes      | Path to submission directory.              |
-| `TENSORHERO_STAGE`           | No       | Target stage slug (STAGE mode).            |
-| `TENSORHERO_TEST_CASES_JSON` | No       | JSON array of test case slugs (JSON mode). |
-| `TENSORHERO_RANDOM_SEED`     | No       | Deterministic seed for reproducible tests. |
-| `TENSORHERO_SKIP_ANTI_CHEAT` | No       | Skip anti-cheat stages when set.           |
-| `TENSORHERO_STREAM_LOGS`     | No       | Stream logs in real time.                  |
-| `TENSORHERO_RECORD_FIXTURES` | No       | Record test fixtures for replay.           |
+| `BOOTCRAFT_REPOSITORY_DIR`  | Yes      | Path to submission directory.              |
+| `BOOTCRAFT_STAGE`           | No       | Target stage slug (STAGE mode).            |
+| `BOOTCRAFT_TEST_CASES_JSON` | No       | JSON array of test case slugs (JSON mode). |
+| `BOOTCRAFT_RANDOM_SEED`     | No       | Deterministic seed for reproducible tests. |
+| `BOOTCRAFT_SKIP_ANTI_CHEAT` | No       | Skip anti-cheat stages when set.           |
+| `BOOTCRAFT_STREAM_LOGS`     | No       | Stream logs in real time.                  |
+| `BOOTCRAFT_RECORD_FIXTURES` | No       | Record test fixtures for replay.           |
 | `TENSORHERO_SECRET`          | No       | Secret(s) filtered from child env.         |
 
-### Submission Config (`tensorhero.yml`)
+### Submission Config (`bootcraft.yml`)
 
 Optional YAML file in the submission directory:
 
@@ -215,7 +215,7 @@ debug: true # Enables debug-level logging
 | Fluent Runner API             | Mirrors check50 UX — course authors write readable, sequential assertions.          |
 | Anti-cheat quiet mode         | Runs duplicate tests silently so students cannot reverse-engineer expected outputs. |
 | `TENSORHERO_SECRET` filtering | Defense-in-depth: secrets never leak into child process environment.                |
-| Deterministic RNG             | `TENSORHERO_RANDOM_SEED` enables reproducible test runs for debugging.              |
+| Deterministic RNG             | `BOOTCRAFT_RANDOM_SEED` enables reproducible test runs for debugging.              |
 
 ## 11. Extension Points
 

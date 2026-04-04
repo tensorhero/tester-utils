@@ -8,9 +8,9 @@ import (
 	"strings"
 	"testing"
 
-	tester_utils "github.com/tensorhero-cn/tester-utils"
-	"github.com/tensorhero-cn/tester-utils/stdio_mocker"
-	"github.com/tensorhero-cn/tester-utils/tester_definition"
+	tester_utils "github.com/bootcraft-cn/tester-utils"
+	"github.com/bootcraft-cn/tester-utils/stdio_mocker"
+	"github.com/bootcraft-cn/tester-utils/tester_definition"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -135,9 +135,9 @@ func runCLIStage(testerDefinition tester_definition.TesterDefinition, testCasesJ
 	}
 
 	return tester_utils.RunCLI(map[string]string{
-		"TENSORHERO_TEST_CASES_JSON": testCasesJson,
-		"TENSORHERO_REPOSITORY_DIR":  path,
-		"TENSORHERO_SKIP_ANTI_CHEAT": strconv.FormatBool(skipAntiCheat),
+		"BOOTCRAFT_TEST_CASES_JSON": testCasesJson,
+		"BOOTCRAFT_REPOSITORY_DIR":  path,
+		"BOOTCRAFT_SKIP_ANTI_CHEAT": strconv.FormatBool(skipAntiCheat),
 	}, testerDefinition)
 }
 

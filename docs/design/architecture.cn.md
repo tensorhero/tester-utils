@@ -1,4 +1,4 @@
-# TensorHero Tester Utils — 架构设计
+# BootCraft Tester Utils — 架构设计
 
 ## 1. 概述
 
@@ -26,7 +26,7 @@
 | `runner`                | 输出断言的流式 API：`Run().Stdin().Stdout().Exit()`。                    |
 | `logger`                | 带颜色的分级日志，全局互斥锁序列化，静默模式。                           |
 | `linewriter`            | 基于 channel 的行缓冲；遇换行符或 500 ms 超时即刷新。                    |
-| `random`                | 确定性随机数生成器，由 `TENSORHERO_RANDOM_SEED` 控制种子。               |
+| `random`                | 确定性随机数生成器，由 `BOOTCRAFT_RANDOM_SEED` 控制种子。               |
 | `bytes_diff_visualizer` | 十六进制 + ASCII 差异渲染，ANSI 彩色标记首个差异字节。                   |
 | `stdio_mocker`          | 测试工具：用临时文件替换 `os.Stdout/Stdin/Stderr`。                      |
 | `testing`               | `ValidateTesterDefinitionAgainstYAML` — 校验测试器定义与课程 YAML 一致。 |
@@ -55,8 +55,8 @@ main() → tester.Run(definition)
 
 | 模式      | 触发条件                            | 行为                                  |
 | --------- | ----------------------------------- | ------------------------------------- |
-| **JSON**  | 设置了 `TENSORHERO_TEST_CASES_JSON` | 运行 JSON 中指定的测试用例。          |
-| **STAGE** | 设置了 `TENSORHERO_STAGE`           | 运行到指定阶段 slug（含该阶段）为止。 |
+| **JSON**  | 设置了 `BOOTCRAFT_TEST_CASES_JSON` | 运行 JSON 中指定的测试用例。          |
+| **STAGE** | 设置了 `BOOTCRAFT_STAGE`           | 运行到指定阶段 slug（含该阶段）为止。 |
 | **ALL**   | 均未设置                            | 按顺序运行全部测试用例。              |
 
 ## 4. 四阶段测试流水线
@@ -163,16 +163,16 @@ Logger
 
 | 变量                         | 必需 | 说明                                      |
 | ---------------------------- | ---- | ----------------------------------------- |
-| `TENSORHERO_REPOSITORY_DIR`  | 是   | 提交代码目录路径。                        |
-| `TENSORHERO_STAGE`           | 否   | 目标阶段 slug（STAGE 模式）。             |
-| `TENSORHERO_TEST_CASES_JSON` | 否   | 测试用例 slug 的 JSON 数组（JSON 模式）。 |
-| `TENSORHERO_RANDOM_SEED`     | 否   | 用于可复现测试的确定性种子。              |
-| `TENSORHERO_SKIP_ANTI_CHEAT` | 否   | 设置后跳过反作弊阶段。                    |
-| `TENSORHERO_STREAM_LOGS`     | 否   | 实时流式输出日志。                        |
-| `TENSORHERO_RECORD_FIXTURES` | 否   | 录制测试夹具以供回放。                    |
+| `BOOTCRAFT_REPOSITORY_DIR`  | 是   | 提交代码目录路径。                        |
+| `BOOTCRAFT_STAGE`           | 否   | 目标阶段 slug（STAGE 模式）。             |
+| `BOOTCRAFT_TEST_CASES_JSON` | 否   | 测试用例 slug 的 JSON 数组（JSON 模式）。 |
+| `BOOTCRAFT_RANDOM_SEED`     | 否   | 用于可复现测试的确定性种子。              |
+| `BOOTCRAFT_SKIP_ANTI_CHEAT` | 否   | 设置后跳过反作弊阶段。                    |
+| `BOOTCRAFT_STREAM_LOGS`     | 否   | 实时流式输出日志。                        |
+| `BOOTCRAFT_RECORD_FIXTURES` | 否   | 录制测试夹具以供回放。                    |
 | `TENSORHERO_SECRET`          | 否   | 从子进程环境中过滤的密钥。                |
 
-### 提交配置（`tensorhero.yml`）
+### 提交配置（`bootcraft.yml`）
 
 提交目录中的可选 YAML 文件：
 
@@ -215,7 +215,7 @@ debug: true # 启用调试级别日志
 | 流式 Runner API          | 借鉴 check50 用户体验 — 课程作者能编写可读的、顺序的断言。 |
 | 反作弊静默模式           | 静默运行重复测试，防止学生逆向推断期望输出。               |
 | `TENSORHERO_SECRET` 过滤 | 纵深防御：密钥永远不会泄露到子进程环境中。                 |
-| 确定性随机数             | `TENSORHERO_RANDOM_SEED` 支持可复现的测试运行，便于调试。  |
+| 确定性随机数             | `BOOTCRAFT_RANDOM_SEED` 支持可复现的测试运行，便于调试。  |
 
 ## 11. 扩展点
 

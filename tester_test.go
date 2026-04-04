@@ -6,8 +6,8 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/tensorhero-cn/tester-utils/test_case_harness"
-	"github.com/tensorhero-cn/tester-utils/tester_definition"
+	"github.com/bootcraft-cn/tester-utils/test_case_harness"
+	"github.com/bootcraft-cn/tester-utils/tester_definition"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -42,8 +42,8 @@ func TestAllStagesPass(t *testing.T) {
 		},
 	}
 	env := map[string]string{
-		"TENSORHERO_REPOSITORY_DIR":  "./test_helpers/valid_app_dir",
-		"TENSORHERO_TEST_CASES_JSON": buildTestCasesJson([]string{"test-1", "test-2"}),
+		"BOOTCRAFT_REPOSITORY_DIR":  "./test_helpers/valid_app_dir",
+		"BOOTCRAFT_TEST_CASES_JSON": buildTestCasesJson([]string{"test-1", "test-2"}),
 	}
 	exitCode := RunCLI(env, definition)
 	assert.Equal(t, exitCode, 0)
@@ -58,8 +58,8 @@ func TestOneStageFails(t *testing.T) {
 	}
 
 	env := map[string]string{
-		"TENSORHERO_REPOSITORY_DIR":  "./test_helpers/valid_app_dir",
-		"TENSORHERO_TEST_CASES_JSON": buildTestCasesJson([]string{"test-1", "test-2"}),
+		"BOOTCRAFT_REPOSITORY_DIR":  "./test_helpers/valid_app_dir",
+		"BOOTCRAFT_TEST_CASES_JSON": buildTestCasesJson([]string{"test-1", "test-2"}),
 	}
 	exitCode := RunCLI(env, definition)
 	assert.Equal(t, exitCode, 1)

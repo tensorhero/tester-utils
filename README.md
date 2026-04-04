@@ -1,6 +1,6 @@
-# TensorHero Tester Utils
+# BootCraft Tester Utils
 
-TensorHero 课程测试工具的共享框架模块。
+BootCraft 课程测试工具的共享框架模块。
 
 **基于：** [codecrafters-io/tester-utils](https://github.com/codecrafters-io/tester-utils)
 
@@ -10,7 +10,7 @@ TensorHero 课程测试工具的共享框架模块。
 - **流式 Runner API** — check50 风格的程序测试，支持阻塞、交互、PTY 模式
 - **灵活运行模式** — 平台派发（JSON）、单阶段、全量运行（默认）
 - **CLI 支持** — `./tester hello`、`./tester -s hello -d ~/work`、`--help`
-- **合理默认值** — `tensorhero.yml` 可选，工作目录默认为 `.`
+- **合理默认值** — `bootcraft.yml` 可选，工作目录默认为 `.`
 
 ## 快速开始
 
@@ -19,8 +19,8 @@ package main
 
 import (
     "os"
-    tester_utils "github.com/tensorhero-cn/tester-utils"
-    "github.com/tensorhero-cn/tester-utils/tester_definition"
+    tester_utils "github.com/bootcraft-cn/tester-utils"
+    "github.com/bootcraft-cn/tester-utils/tester_definition"
 )
 
 func main() {
@@ -81,7 +81,7 @@ tester_definition.TestCase{
 用于测试程序的流式 API：
 
 ```go
-import "github.com/tensorhero-cn/tester-utils/runner"
+import "github.com/bootcraft-cn/tester-utils/runner"
 
 // 阻塞模式 — 发送 stdin，检查 stdout + 退出码
 err := runner.Run(workDir, "hello").
@@ -123,15 +123,15 @@ err := runner.CompileC(workDir, "hello.c", "hello", "-I..")
 
 | 变量                         | 说明                                         |
 | ---------------------------- | -------------------------------------------- |
-| `TENSORHERO_REPOSITORY_DIR`  | 工作目录（默认：`.`）                        |
-| `TENSORHERO_STAGE`           | 按 slug 运行单个阶段（调试用）               |
-| `TENSORHERO_TEST_CASES_JSON` | 完整 JSON 测试用例列表（Worker 派发时使用）  |
-| `TENSORHERO_RANDOM_SEED`     | 固定随机种子，用于确定性随机数               |
-| `TENSORHERO_SKIP_ANTI_CHEAT` | 设为 `true` 跳过反作弊测试用例               |
-| `TENSORHERO_STREAM_LOGS`     | 设为 `1` 禁用颜色并将 stdout 重定向至 stderr |
-| `TENSORHERO_RECORD_FIXTURES` | 设为 `true` 录制/更新测试 fixture            |
+| `BOOTCRAFT_REPOSITORY_DIR`  | 工作目录（默认：`.`）                        |
+| `BOOTCRAFT_STAGE`           | 按 slug 运行单个阶段（调试用）               |
+| `BOOTCRAFT_TEST_CASES_JSON` | 完整 JSON 测试用例列表（Worker 派发时使用）  |
+| `BOOTCRAFT_RANDOM_SEED`     | 固定随机种子，用于确定性随机数               |
+| `BOOTCRAFT_SKIP_ANTI_CHEAT` | 设为 `true` 跳过反作弊测试用例               |
+| `BOOTCRAFT_STREAM_LOGS`     | 设为 `1` 禁用颜色并将 stdout 重定向至 stderr |
+| `BOOTCRAFT_RECORD_FIXTURES` | 设为 `true` 录制/更新测试 fixture            |
 
 ## 文档
 
-- [GoDoc](https://pkg.go.dev/github.com/tensorhero-cn/tester-utils)
+- [GoDoc](https://pkg.go.dev/github.com/bootcraft-cn/tester-utils)
 - [四阶段流水线设计](docs/4-phase-pipeline/design.md)

@@ -1,4 +1,4 @@
-module github.com/tensorhero-cn/tester-utils
+module github.com/bootcraft-cn/tester-utils
 
 go 1.24
 

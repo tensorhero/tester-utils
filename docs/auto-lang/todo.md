@@ -194,8 +194,8 @@
 
 ### T4.3 端到端验证
 
-- **场景 A**：Java 提交 → `TENSORHERO_REPOSITORY_DIR=java-solution ./tinynum-tester storage-and-shape`
-- **场景 B**：Python 提交 → `TENSORHERO_REPOSITORY_DIR=python-solution ./tinynum-tester storage-and-shape`
+- **场景 A**：Java 提交 → `BOOTCRAFT_REPOSITORY_DIR=java-solution ./tinynum-tester storage-and-shape`
+- **场景 B**：Python 提交 → `BOOTCRAFT_REPOSITORY_DIR=python-solution ./tinynum-tester storage-and-shape`
 - **场景 C**：空目录 → 清晰错误信息
 - **工时**: 0.5h
 - **状态**: ⬜ 待实施

@@ -239,13 +239,13 @@ func TestMemoryLimit(t *testing.T) {
 
 func TestHellobbyteSecretEnvVarsFiltered(t *testing.T) {
 	os.Setenv("TENSORHERO_SECRET_API_KEY", "secret-key-123")
-	os.Setenv("TENSORHERO_REPOSITORY_DIR", "/some/path")
+	os.Setenv("BOOTCRAFT_REPOSITORY_DIR", "/some/path")
 	os.Setenv("TEST_REGULAR_VAR", "regular-value")
 
 	defer func() {
 		os.Unsetenv("TENSORHERO_SECRET_API_KEY")
 		os.Unsetenv("TEST_REGULAR_VAR")
-		os.Unsetenv("TENSORHERO_REPOSITORY_DIR")
+		os.Unsetenv("BOOTCRAFT_REPOSITORY_DIR")
 	}()
 
 	e := NewExecutable("env")
@@ -256,7 +256,7 @@ func TestHellobbyteSecretEnvVarsFiltered(t *testing.T) {
 	assert.NotContains(t, output, "TENSORHERO_SECRET_API_KEY")
 	assert.NotContains(t, output, "secret-key-123")
 	assert.Contains(t, output, "TEST_REGULAR_VAR=regular-value")
-	assert.Contains(t, output, "TENSORHERO_REPOSITORY_DIR=/some/path")
+	assert.Contains(t, output, "BOOTCRAFT_REPOSITORY_DIR=/some/path")
 }
 
 func TestPathResolutionWithDifferentWorkingDir(t *testing.T) {

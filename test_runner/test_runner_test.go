@@ -7,10 +7,10 @@ import (
 	"testing"
 	"time"
 
-	"github.com/tensorhero-cn/tester-utils/executable"
-	"github.com/tensorhero-cn/tester-utils/logger"
-	"github.com/tensorhero-cn/tester-utils/test_case_harness"
-	"github.com/tensorhero-cn/tester-utils/tester_definition"
+	"github.com/bootcraft-cn/tester-utils/executable"
+	"github.com/bootcraft-cn/tester-utils/logger"
+	"github.com/bootcraft-cn/tester-utils/test_case_harness"
+	"github.com/bootcraft-cn/tester-utils/tester_definition"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )

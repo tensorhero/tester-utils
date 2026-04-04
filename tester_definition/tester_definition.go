@@ -3,7 +3,7 @@ package tester_definition
 import (
 	"time"
 
-	"github.com/tensorhero-cn/tester-utils/test_case_harness"
+	"github.com/bootcraft-cn/tester-utils/test_case_harness"
 )
 
 // LanguageRule defines a language detection rule for CompileStep.Language="auto" mode.

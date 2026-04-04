@@ -5,8 +5,8 @@ import (
 	"os/exec"
 	"time"
 
-	"github.com/tensorhero-cn/tester-utils/test_case_harness"
-	"github.com/tensorhero-cn/tester-utils/tester_definition"
+	"github.com/bootcraft-cn/tester-utils/test_case_harness"
+	"github.com/bootcraft-cn/tester-utils/tester_definition"
 )
 
 // defaultCompileTimeout is the hard timeout for compilation steps.
