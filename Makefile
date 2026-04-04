@@ -1,9 +1,9 @@
-current_patch_number := $(shell git tag --list "v0.4.*" | sort -V | tail -n 1 | cut -c 6-)
-next_patch_number := $(shell echo $$(($(current_patch_number)+1)))
+current_minor_number := $(shell git tag --list "v1.*" | sort -V | tail -n 1 | cut -c 4-)
+next_minor_number := $(shell echo $$(($(current_minor_number)+1)))
 
 release:
-	git tag v0.4.$(next_patch_number)
-	git push origin master v0.4.$(next_patch_number)
+	git tag v1.$(next_minor_number).0
+	git push origin master v1.$(next_minor_number).0
 
 test:
 	go test -v ./...
