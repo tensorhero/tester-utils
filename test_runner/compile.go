@@ -53,6 +53,19 @@ func (r TestRunner) runCompileStep(harness *test_case_harness.TestCaseHarness, c
 		logger.Successf("%s syntax OK", cs.Source)
 		return nil
 
+	case "go":
+		logger.Infof("Checking %s builds...", cs.Source)
+		if err := checkGoBuild(workDir, cs); err != nil {
+			return fmt.Errorf("%s does not build: %v", cs.Source, err)
+		}
+		logger.Successf("%s builds OK", cs.Source)
+		return nil
+
+	case "typescript":
+		// TypeScript runs via tsx at runtime; no separate compile step needed.
+		logger.Infof("TypeScript detected (%s), skipping compilation", cs.Source)
+		return nil
+
 	case "auto":
 		if len(cs.AutoDetect) == 0 {
 			return fmt.Errorf("CompileStep Language=\"auto\" but AutoDetect is empty")
@@ -144,6 +157,23 @@ func compileJava(workDir string, cs *tester_definition.CompileStep) error {
 // No executable is produced; this is an optional early-fail step for interpreted languages.
 func checkPythonSyntax(workDir string, cs *tester_definition.CompileStep) error {
 	cmd := exec.Command("python3", "-m", "py_compile", cs.Source)
+	cmd.Dir = workDir
+	out, err := cmd.CombinedOutput()
+	if err != nil {
+		return fmt.Errorf("%s\nOutput:\n%s", err, string(out))
+	}
+	return nil
+}
+
+// checkGoBuild runs "go build" to verify the Go code compiles without errors.
+// No binary is produced (uses -o /dev/null equivalent via build-only flag).
+// CompileStep.Source should be the package path (e.g. "./pkg/tinydsa").
+func checkGoBuild(workDir string, cs *tester_definition.CompileStep) error {
+	args := []string{"build"}
+	args = append(args, cs.Flags...)
+	args = append(args, cs.Source)
+
+	cmd := exec.Command("go", args...)
 	cmd.Dir = workDir
 	out, err := cmd.CombinedOutput()
 	if err != nil {
