@@ -62,8 +62,11 @@ func (r TestRunner) runCompileStep(harness *test_case_harness.TestCaseHarness, c
 		return nil
 
 	case "typescript":
-		// TypeScript runs via tsx at runtime; no separate compile step needed.
-		logger.Infof("TypeScript detected (%s), skipping compilation", cs.Source)
+		logger.Infof("Compiling TypeScript with tsc...")
+		if err := compileTypeScript(workDir, cs); err != nil {
+			return fmt.Errorf("tsc failed: %v", err)
+		}
+		logger.Successf("TypeScript compiled OK")
 		return nil
 
 	case "auto":
@@ -174,6 +177,30 @@ func checkGoBuild(workDir string, cs *tester_definition.CompileStep) error {
 	args = append(args, cs.Source)
 
 	cmd := exec.Command("go", args...)
+	cmd.Dir = workDir
+	out, err := cmd.CombinedOutput()
+	if err != nil {
+		return fmt.Errorf("%s\nOutput:\n%s", err, string(out))
+	}
+	return nil
+}
+
+// compileTypeScript invokes tsc to transpile the project's .ts files into .js.
+// We use the official TypeScript compiler (pure JavaScript, no WebAssembly)
+// because every WASM-based alternative (tsx, esbuild, swc, Node's built-in
+// --experimental-strip-types via amaro) crashes inside docker with
+// "WebAssembly.Instance(): Out of memory" due to V8's WASM-memory sandbox
+// limits not playing well with cgroup memory accounting.
+//
+// CompileStep.Flags are passed to tsc (e.g. ["-p", "."] to use a tsconfig).
+// If Flags is empty, defaults to ["-p", "."] which compiles using tsconfig.json.
+func compileTypeScript(workDir string, cs *tester_definition.CompileStep) error {
+	args := cs.Flags
+	if len(args) == 0 {
+		args = []string{"-p", "."}
+	}
+
+	cmd := exec.Command("tsc", args...)
 	cmd.Dir = workDir
 	out, err := cmd.CombinedOutput()
 	if err != nil {
